@@ -1,0 +1,38 @@
+<div class="sideNav" id="sideNav">
+  <ul class="navbar-nav">
+    <div class="panel sideNav-div" *ngIf="canAccessHome">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/Home']" [routerLinkActive]="['active-link']">Home</a>
+      </li>
+    </div>
+    <div class="panel sideNav-div" *ngIf="canAccessSearch">
+      <li class="nav-item">
+        <a class="nav-link dropdown-toggle" href="#searchDrop" data-toggle="collapse" aria-expanded="false"
+          aria-controls="searchDrop">
+          {{ "Label.Sector" | translate }}
+        </a>
+        <div class="collapse sideNav-div-child" id="searchDrop">
+          <ul class="nav nav-sm flex-column">
+            <li class="nav-item">
+              <a [routerLink]="['/sectorPerformance']" [routerLinkActive]="['active-link']">
+                <span>{{ "Label.SectorPerformance" | translate }}</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/']" [routerLinkActive]="['active-link']">
+                <span>{{ "Label.SectorDashboard" | translate }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </div>
+    <div class="panel sideNav-div" *ngIf="canAccessAdmin">
+      <li class="nav-item">
+        <a [routerLink]="['/']" [routerLinkActive]="['active-link']">
+          {{ "Label.StockPerformance" | translate }}
+        </a>
+      </li>
+    </div>
+  </ul>
+</div>
