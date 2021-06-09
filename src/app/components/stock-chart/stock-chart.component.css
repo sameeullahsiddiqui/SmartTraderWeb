@@ -1,0 +1,31 @@
+
+.positive {
+  background: green;
+  color:white;
+  text-align: right;
+}
+
+.negative {
+  background: red;
+  color:white;
+  text-align: right;
+}
+
+#container {
+	max-height: 800px;
+	min-height: 75vh;
+}
+
+
+p-progressbar {
+  height: 100%;
+  background-color: #D8DADC;
+}
+
+p-progressbar-value {
+  background-color: #607D8B;
+}
+
+button {
+  margin-right: 5px;
+}

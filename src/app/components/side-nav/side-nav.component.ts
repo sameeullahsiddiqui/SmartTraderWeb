@@ -7,6 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SideNavComponent implements OnInit {
 
+ isExpanded = false;
+
+  collapse(): any {
+    this.isExpanded = false;
+  }
+
+  toggle(): any {
+    this.isExpanded = !this.isExpanded;
+  }
+
   constructor() { }
 
   ngOnInit(): void {

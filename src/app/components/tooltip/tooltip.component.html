@@ -1,0 +1,20 @@
+<div class="tooltip">
+  <h3><span style='font-weight:bold'>{{ selectedStockPrice?.symbolName }}</span></h3>
+  <br>
+  <div>Date: {{ getDate() }}</div>
+  <br>
+  <div>O: <span style='font-weight:bold'>{{ selectedStockPrice?.open }} </span></div>
+  <div>H: <span style='font-weight:bold'>{{ selectedStockPrice?.high }} </span></div>
+  <div>L: <span style='font-weight:bold'>{{ selectedStockPrice?.low }} </span></div>
+  <div>C: <span style='font-weight:bold'>{{ selectedStockPrice?.close }} </span></div>
+  <div>V: <span style='font-weight:bold'>{{ selectedStockPrice?.deliveryQty }} </span></div>
+  <br>
+  <div >D: <span style ='{{getCssClass(selectedStockPrice?.percentage)}}'>{{ selectedStockPrice?.percentage }}% </span></div>
+  <div>W: <span style ='{{getCssClass(selectedStockPrice?.weekly)}}'>{{ selectedStockPrice?.weekly }}% </span></div>
+  <div>M: <span style ='{{getCssClass(selectedStockPrice?.monthly)}}'>{{ selectedStockPrice?.monthly }}% </span></div>
+  <br>
+  <div>Delivery Ratio: <span style ='{{getCssDelivery(selectedStockPrice?.delRatio)}}'>{{ selectedStockPrice?.delRatio }}  </span></div>
+  <div>Average Delivery: <span style ='margin-left:5px; font-weight:bold'>{{ selectedStockPrice?.avgDelivery_30 }}</span></div>
+  <br>
+  <div>Pattern: {{ selectedStockPrice?.reason }}</div>
+</div>

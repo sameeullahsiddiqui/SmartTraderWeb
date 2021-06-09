@@ -12,7 +12,7 @@ import { slideInAnimation } from './shared/animations/animation';
 export class AppComponent {
   title = 'JCASWeb';
   updateUserExpireTime: any;
-  triggeredNotification: boolean = false;
+  triggeredNotification = false;
   hideSideNav = false;
   isAuth = false;
 
@@ -21,7 +21,7 @@ export class AppComponent {
   ) {
   }
 
-  prepareRoute(outlet: RouterOutlet) {
+  prepareRoute(outlet: RouterOutlet): any {
     return (
       outlet &&
       outlet.activatedRouteData &&
@@ -29,7 +29,7 @@ export class AppComponent {
     );
   }
 
-  toggleMenuEventClicked($event:any) {
+  toggleMenuEventClicked($event: any): any {
     this.hideSideNav = $event;
   }
 }

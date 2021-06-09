@@ -1,46 +1,76 @@
-<div>
-  <nav class="navbar navbar-expand fixed-top header">
-    <button class="btn" (click)="hideSideNavEvent()">
-      <i class="fa fa-bars white"></i>
-    </button>
-    <a [routerLink]="['/Home']" class="navbar-brand logo">
-      <img
-        src="{{ 'Image.JCASLogo'}}"
-        [alt]="version"
-        [title]="version"
-      />
-      <span class="logoText">{{ version }}</span>
-    </a>
-    <div class="collapse navbar-collapse" id="navbarToggler1">
-      <ul class="nav navbar-nav mr-auto">
-        <app-loading></app-loading>
-      </ul>
-      <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item dropdown headerDropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href=""
-            id="navbarDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="logOutDrop"
-          >
-            <i class="fa fa-user"> </i> {{ username }}
-          </a>
-          <div
-            class="dropdown-menu"
-            aria-labelledby="navbarDropdown"
-            id="logOutDrop"
-          >
-            <li>
-              <a class="dropdown-item text-center" (click)="logout()">
-                <i class="fa fa-sign-out"></i>LogOut</a>
-            </li>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
-</div>
+<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
+  <a [routerLink]="['/home']" class="navbar-brand">
+    <img
+    src="assets/img/app_logo.png"
+    [alt]="version"
+    [title]="version"
+  />
+  Smart Trader
+  <span class="logoText">{{ version }}</span>
+  </a>
+
+  <div class="navbar">
+    <ul ngbNav class="navbar-nav mr-auto">
+      <li [ngbNavItem] = "1" class="nav-item">
+        <a ngbNavLink class="nav-link" [routerLink]="['/home']">
+          <i class="fa fa-home"></i>
+          Home<span class="sr-only">(current)</span></a>
+      </li>
+      <li ngbDropdown class="nav-item">
+        <a ngbDropdownToggle class="nav-link" (click)="false">
+          <i class="fa fa-line-chart"><span class="badge badge-primary"></span></i>
+          Sector Analysis
+        </a>
+        <div ngbDropdownMenu>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/sectordashboard']">Sector Dashboard</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/sector']">Sector Performance</a>
+        </div>
+      </li>
+      <li ngbDropdown class="nav-item">
+        <a ngbDropdownToggle class="nav-link" (click)="false">
+          <i class="fa fa-area-chart"><span class="badge badge-primary"></span></i>
+          Industry Analysis
+        </a>
+        <div ngbDropdownMenu>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/industrydashboard']">Dashboard</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/industry']">Performance</a>
+        </div>
+      </li>
+      <li ngbDropdown class="nav-item">
+        <a ngbDropdownToggle class="nav-link" (click)="false">
+          <i class="fa fa-bar-chart-o"><span class="badge badge-primary"></span></i>
+          Stock Analysis
+        </a>
+        <div ngbDropdownMenu>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/delivery']">Stock Delivery</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/allStocks']">All Stocks</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/watchlist']">Watchlist</a>
+        </div>
+      </li>
+      <li ngbDropdown class="nav-item">
+        <a ngbDropdownToggle class="nav-link" (click)="false">
+          <i class="fa fa-television"><span class="badge badge-primary"></span></i>
+          Management
+        </a>
+        <div ngbDropdownMenu>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/corporateActions']">Corporate Actions</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/trades']">Trades</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/portfolio']">Portfolio</a>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/backgroundJobs']">Background Jobs</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/fileCategory']">File Category</a>
+        </div>
+      </li>
+
+    </ul>
+    <!-- <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
+  </div>
+</nav>

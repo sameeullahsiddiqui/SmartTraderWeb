@@ -1,0 +1,119 @@
+
+<p-toast></p-toast>
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+<div class="row" style="margin-top: 5px">
+  <div class="col-md-1"><span></span></div>
+  <div class="col-md-1"><span>Symbol: </span></div>
+  <div class="col-md-2">
+    <p-autoComplete [(ngModel)]="stockName" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+  </div>
+  <div class="col-md-1"><span>Date: </span></div>
+  <div class="col-md-2">
+    <p-calendar
+      [disabledDays]="[0, 6]"
+      [(ngModel)]="dateParam"
+      [showIcon]="true"
+      inputId="icon"
+    ></p-calendar>
+  </div>
+
+  <div class="col-md-3">
+    <button
+            pButton
+            pRipple
+            label="Search"
+            icon="pi pi-search"
+            class="p-button-rounded p-button-success p-mr-2 p-col-6"
+            (click)="searchRecords()">
+    </button>
+    <button
+    pButton
+    pRipple
+    label = "Watch"
+    icon="pi pi-plus"
+    class="p-button-rounded p-button-warning p-col-6"
+    (click)="addToWatchList()">
+  </button>
+  <button
+  pButton
+  pRipple
+  label = "Generate"
+  icon="pi pi-replay"
+  class="p-button-rounded p-button-error p-mr-2 p-col-6"
+  (click)="updateIndicators()"></button>
+
+  </div>
+  <div class="col-md-2">
+    <p-selectButton [options]="stateOptions" [(ngModel)]="isChart" optionLabel="label" optionValue="value"></p-selectButton>
+  </div>
+
+</div>
+<div class="card" *ngIf="isChart === 'off'">
+  <p-table
+    [value]="stockPrices"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="date">Date<p-sortIcon field="date"></p-sortIcon></th>
+        <th>Open</th>
+        <th>High</th>
+        <th>Low</th>
+        <th>Close</th>
+        <th>%</th>
+        <th>Del Ratio</th>
+        <th>Monthly</th>
+        <th>Weekly</th>
+        <th>Del Qty</th>
+        <th>AvgDel (30)</th>
+        <th pSortableColumn="reason">Reason<p-sortIcon field="reason"></p-sortIcon></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-stockprice let-rowIndex="rowIndex">
+      <tr>
+        <td>{{ stockprice.date | date: "yyyy-MM-dd" }}</td>
+        <td>{{ stockprice.open }}</td>
+        <td>{{ stockprice.high }}</td>
+        <td>{{ stockprice.low }}</td>
+        <td>{{ stockprice.close }}</td>
+        <td
+          [ngClass]="{
+            positive: stockprice.percentage > 0,
+            negative: stockprice.percentage < 0
+          }"
+        >
+          {{ stockprice.percentage }}%
+        </td>
+        <td>{{ stockprice.delRatio   | number}}</td>
+        <td
+          [ngClass]="{
+            positive: stockprice.weekly > 0,
+            negative: stockprice.weekly < 0
+          }"
+        >
+          {{ stockprice.weekly }}%
+        </td>
+        <td
+          [ngClass]="{
+            positive: stockprice.monthly > 0,
+            negative: stockprice.monthly < 0
+          }"
+        >
+          {{ stockprice.monthly }}%
+        </td>
+        <td>{{ stockprice.deliveryQty }}</td>
+        <td>{{ stockprice.avgDelivery_30 }}</td>
+        <td>{{ stockprice.reason }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<highcharts-chart *ngIf="chartOptions && (isChart === 'on')"
+  [Highcharts]="Highcharts"
+  [constructorType]="'stockChart'"
+  [options]="chartOptions"
+  [(update)]="updateChart"
+  style="width: 100%; height: 400px; display: block;"
+></highcharts-chart>

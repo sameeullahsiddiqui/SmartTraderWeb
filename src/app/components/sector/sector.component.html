@@ -1,0 +1,57 @@
+<p-toast></p-toast>
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+<div class="row" style="padding-top: 2px">
+  <div class="col-md-4">
+    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+  </div>
+  <div class="col-md-2"><span>Sector:</span></div>
+  <div class="col-md-2">
+    <input type="text" pInputText [(ngModel)]="sectorName" placeholder="Sector Name"/>
+  </div>
+
+  <div class="col-md-2">
+    <p-button (onClick)="searchRecords()" label="Search"></p-button>
+  </div>
+  <div class="col-md-2">
+    <p-selectButton [options]="stateOptions" [(ngModel)]="isChart" optionLabel="label" optionValue="value"></p-selectButton>
+  </div>
+
+</div>
+<div class="card" *ngIf="isChart === 'off'">
+  <p-table
+    [value]="sectors"
+    sortField="sector"
+    sortMode="single"
+    (onSort)="onSort()"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="date">Date<p-sortIcon field="date"></p-sortIcon></th>
+        <th>Gainer</th>
+        <th>Looser</th>
+        <th>Nutral</th>
+        <th>Total</th>
+        <th>Ratio</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-sector let-rowIndex="rowIndex">
+      <tr>
+        <td>{{ sector.date | date: "yyyy-MM-dd" }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,1)">{{ sector.gain }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,-1)">{{ sector.loss }}</td>
+        <td>{{ sector.nutral }}</td>
+        <td>{{ sector.total }}</td>
+        <td>{{ (sector.gain/sector.total) * 100 | number:'1.0-0'}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<highcharts-chart *ngIf="chartOptions && (isChart === 'on')"
+  [Highcharts]="Highcharts"
+  [options]="chartOptions"
+  [(update)]="updateChart"
+  style="width: 100%; height: 400px; display: block;"
+></highcharts-chart>

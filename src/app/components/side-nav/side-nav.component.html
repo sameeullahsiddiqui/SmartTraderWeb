@@ -1,36 +1,34 @@
 <div class="sideNav" id="sideNav">
   <ul class="navbar-nav">
-    <div class="panel sideNav-div" *ngIf="canAccessHome">
+    <div class="panel sideNav-div">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/Home']" [routerLinkActive]="['active-link']">Home</a>
+        <a class="nav-link" [routerLink]="['/home']" [routerLinkActive]="['active-link']">Home</a>
       </li>
     </div>
-    <div class="panel sideNav-div" *ngIf="canAccessSearch">
+    <div class="panel sideNav-div">
       <li class="nav-item">
         <a class="nav-link dropdown-toggle" href="#searchDrop" data-toggle="collapse" aria-expanded="false"
-          aria-controls="searchDrop">
-          {{ "Label.Sector" | translate }}
-        </a>
+          aria-controls="searchDrop">Sector</a>
         <div class="collapse sideNav-div-child" id="searchDrop">
           <ul class="nav nav-sm flex-column">
             <li class="nav-item">
-              <a [routerLink]="['/sectorPerformance']" [routerLinkActive]="['active-link']">
-                <span>{{ "Label.SectorPerformance" | translate }}</span>
+              <a [routerLink]="['/sectorperformance']" [routerLinkActive]="['active-link']">
+                <span>Performance</span>
               </a>
             </li>
             <li class="nav-item">
               <a [routerLink]="['/']" [routerLinkActive]="['active-link']">
-                <span>{{ "Label.SectorDashboard" | translate }}</span>
+                <span>Dashboard</span>
               </a>
             </li>
           </ul>
         </div>
       </li>
     </div>
-    <div class="panel sideNav-div" *ngIf="canAccessAdmin">
+    <div class="panel sideNav-div">
       <li class="nav-item">
         <a [routerLink]="['/']" [routerLinkActive]="['active-link']">
-          {{ "Label.StockPerformance" | translate }}
+          Performance
         </a>
       </li>
     </div>

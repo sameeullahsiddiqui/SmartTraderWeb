@@ -1,0 +1,19 @@
+.tooltip {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.tooltip h3 {
+  margin: 0px 0px 15px 0;
+}
+
+.tooltip div {
+  line-height: 1.4;
+}
+
+.ohlc{
+padding-right: 2px;
+}

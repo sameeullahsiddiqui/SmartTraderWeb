@@ -1,0 +1,104 @@
+<p-toast></p-toast>
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+<div class="row" style="padding-top: 2px">
+  <div class="col-md-4">
+    <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb>
+  </div>
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Update Split/Bonus</div>
+      <div class="panel-body">
+    <form [formGroup]="this.splitFormInput">
+      <div class="row">
+        <div class="col-sm-1">
+          <label for="symbol">Stock: </label>
+        </div>
+        <div class="col-sm-2">
+          <p-autoComplete formControlName="symbol" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+        </div>
+        <div class="col-sm-1">
+          <label for="date">Date: </label>
+        </div>
+        <div class="col-md-2">
+          <p-calendar
+            [disabledDays]="[0, 6]"
+            formControlName="date"
+            [showIcon]="true"
+            inputId="icon"
+          ></p-calendar>
+        </div>
+        <div class="col-sm-1">
+          <label for="symbol">Operation Type: </label>
+        </div>
+        <div class="col-sm-2">
+          <p-dropdown
+            [options]="operatioTypes"
+            formControlName="operationType"
+            optionLabel="name"
+          ></p-dropdown>
+        </div>
+        <div class="col-md-3">
+          <button
+            pButton
+            pRipple
+            label="Split/Bonus"
+            icon="pi pi-check"
+            (click)="updateSplit()"
+          ></button>
+
+      </div>
+
+      <div class="row row-padding" >
+        <div class="col-sm-1">
+          <label for="symbol">Old Face Value: </label>
+        </div>
+        <div class="col-sm-2">
+          <input type="text" formControlName="oldFaceValue" required />
+        </div>
+        <div class="col-sm-1">
+          <label for="symbol">New Face Value: </label>
+        </div>
+        <div class="col-sm-2">
+          <input type="text" formControlName="newFaceValue" required />
+        </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Update Earning report for all stocks</div>
+      <div class="panel-body">
+        <form [formGroup]="this.earningFormInput">
+          <div class="row">
+            <div class="col-sm-1">
+              <label for="symbol">Year: </label>
+            </div>
+            <div class="col-sm-2">
+              <input type="text" formControlName="year" required />
+            </div>
+            <div class="col-md-2">
+              <button
+                pButton
+                pRipple
+                label="Update Earning Reports"
+                icon="pi pi-check"
+                (click)="updateEarningTooltips()"
+              ></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

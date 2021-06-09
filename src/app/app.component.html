@@ -1,9 +1,8 @@
 <div>
-  <app-header (toggleMenuEvent)="toggleMenuEventClicked($event)" *ngIf="isAuth"></app-header>
-  <app-side-nav [ngClass]="{ hide: hideSideNav || !isAuth }" *ngIf="isAuth"></app-side-nav>
+  <app-header></app-header>
   <div
     class="mainContainer"
-    [ngClass]="{ expandContainer: hideSideNav || !isAuth }"
+    [ngClass]="{ expandContainer: hideSideNav}"
     [@routeAnimations]="prepareRoute(outlet)"
   >
     <router-outlet #outlet="outlet"></router-outlet>

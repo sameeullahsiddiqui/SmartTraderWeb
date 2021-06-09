@@ -1,0 +1,46 @@
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 69px;
+}
+
+@media screen and (max-width: 64em) {
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    top: 99px;
+  }
+}
+
+.industryheader {
+  background-color:aquamarine;
+  font-weight:bold;
+  font-size:large;
+}
+
+.positive {
+  background: green;
+  color:white;
+  text-align: right;
+}
+
+.negative {
+  background: red;
+  color:white;
+  text-align: right;
+}
+
+.right-aligned {
+  text-align: right;
+}
+
+.high-delivery {
+  color:yellow;
+}
+
+.p-menuitem-link {
+  color: black !important;
+  font-weight: bold;
+}
+
+p-button{
+  padding-right: 5px;
+}
