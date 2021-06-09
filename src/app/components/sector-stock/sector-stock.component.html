@@ -50,10 +50,32 @@
         <td>{{ sector.date | date: "yyyy-MM-dd" }}</td>
         <td style="cursor: pointer; text-decoration: underline;" (click)= "showStock(sector.code)">{{ sector.code }}</td>
         <td>{{ sector.close}}</td>
-        <td>{{ sector.percentage}}</td>
-        <td>{{ sector.weekly}}</td>
-        <td>{{ sector.monthly}}</td>
-        <td>{{ sector.totalTradedQty}}</td>
+        <td
+        [ngClass]="{
+          positive: sector.percentage > 0,
+          negative: sector.percentage < 0
+        }"
+      >
+        {{ sector.percentage }}%
+      </td>
+
+      <td
+      [ngClass]="{
+        positive: sector.weekly > 0,
+        negative: sector.weekly < 0
+      }"
+    >
+      {{ sector.weekly }}%
+    </td>
+    <td
+      [ngClass]="{
+        positive: sector.monthly > 0,
+        negative: sector.monthly < 0
+      }"
+    >
+      {{ sector.monthly }}%
+    </td>
+    <td>{{ sector.totalTradedQty}}</td>
         <td>{{ sector.reason}}</td>
         <td>{{ sector.avgVolume_30}}</td>
         <td>{{ sector.marketCap}}</td>
