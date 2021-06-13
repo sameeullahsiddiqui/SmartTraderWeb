@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, zip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -97,6 +97,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
   chartOptions: any;
   results: string[] = [];
   portfolios: any[] = [];
+  bottom: number | undefined;
+  top: number | undefined;
 
   constructor(
     private stockChartService: StockPriceService,
@@ -141,18 +143,13 @@ export class StockChartComponent implements OnInit, OnDestroy {
     this.stockPrices = [];
     this.loading = true;
 
-    this.stockChartService
-      .getByName(this.stockName, this.searchDate)
+    zip(this.stockChartService .getByName(this.stockName, this.searchDate),this.portfolioService.getByName(this.stockName))
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (data: any[]) => {
-          this.stockPrices = data;
-          this.loading = false;
+      .subscribe(([response1, response2]) => {
+          this.stockPrices = response1;
+          this.portfolios = response2;
 
-          //this.stockPrices.forEach(childObj=> {
-          //childObj.delRatio = childObj.delRatio * 100;
-          //childObj.delPercentage = ((childObj.deliveryQty - childObj.avgDelivery_30)/childObj.avgDelivery_30)*100;
-          //});
+          this.loading = false;
 
           this.showHighChart();
         },
@@ -181,55 +178,32 @@ export class StockChartComponent implements OnInit, OnDestroy {
     return {
       chart: {
         type: 'candlestick',
-        alignTicks: false,
-        zoomType: 'x',
+        panning: { enabled: true, type: "x" },
+        pinchType: "x",
+        events: {},
+        spacingRight: 0,
+        marginRight: 10
       },
       time: { useUTC: false },
-      rangeSelector: { selected: 0, enabled: true },
       title: { text: this.stockName },
       subtitle: { text: '' },
       credits: { enabled: false},
-      xAxis: {
-        type: 'datetime',
-        dateTimeLabelFormats: {
-          millisecond: '%H:%M:%S.%L',
-          second: '%H:%M:%S',
-          minute: '%H:%M',
-          hour: '%H:%M',
-          day: '%e. %b',
-          week: '%e. %b',
-          month: "%b '%y",
-          year: '%Y',
-        },
-      },
-      yAxis: [
-        {
-          title: { text: 'Price' },
-          labels: { align: 'right', x: -3 },
-          showLastLabel: true,
-          minorGridLineWidth: 1,
-          height: '60%',
-          resize: { enabled: true },
-          startOnTick: false,
-          endOnTick: false,
-          lineWidth: 2,
-        },
-        {
-          labels: { align: 'right', x: -3 },
-          title: { text: 'Volume' },
-          top: '65%',
-          height: '35%',
-          offset: 1,
-          lineWidth: 2,
-        },
-      ],
+      navigator: { enabled: true },
+      scrollbar: { enabled: true },
+      rangeSelector: { enabled: true, allButtonsEnabled: true, inputEnabled: true,
+                       inputBoxBorderColor: 'transparent',
+                       inputStyle: { fontWeight: 'bold'},
+                       selected: 1
+                      },
       tooltip: {
         split: true,
         borderColor: '#00537B',
-        style: {
-          fontSize: '10px',
-          padding: '3px',
-        },
+        borderWidth: 0,
+        valueDecimals: 2,
+        shared: true,
+        shadow: true,
+        followPointer: true,
+        style: { fontSize: '10px', padding: '3px',},
         outside: false,
         useHTML: false,
         formatter(): string {
@@ -240,33 +214,129 @@ export class StockChartComponent implements OnInit, OnDestroy {
           return component.location.nativeElement.outerHTML;
         },
       },
-      navigator: { enabled: true },
-      legend: { enabled: true },
+
       stockTools: {
         gui: {
           enabled: true,
           buttons: [
-            'indicators',
-            'separator',
-            'simpleShapes',
-            'lines',
-            'crookedLines',
-            'measure',
-            'advanced',
-            'toggleAnnotations',
-            'separator',
-            'verticalLabels',
-            'flags',
-            'separator',
-            'zoomChange',
-            'fullScreen',
-            'typeChange',
-            'separator',
-            'currentPriceIndicator',
-            'saveChart',
+            'typeChange', 'indicators', 'currentPriceIndicator','separator', 'fullScreen', 'zoomChange',
+            'separator', 'toggleAnnotations', 'simpleShapes', 'flags', 'lines', 'crookedLines', 'measure',
+            'advanced','verticalLabels'
           ],
         },
       },
+
+      colors: [ '#016aff', '#fc5ab2', '#16d8ec', '#fc975a','#b62fff','#7f8899','#8085e9',
+                '#f7a35c', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec'
+              ],
+
+      xAxis: {
+        type: 'datetime',
+        minPadding: 0,
+        maxPadding: 0,
+        overscroll: 0,
+        ordinal: true,
+        labels: { overflow: 'justify' },
+        showLastLabel: true,
+        crosshair: { width: 2 },
+      },
+      yAxis: [
+        {
+          labels: { y:-2, align: 'left', reserveSpace:false , x: -20 },
+
+          showFirstLabel: true,
+          title: { text: 'Price' },
+          top: '0%',
+          height: '65%',
+          resize: { enabled: true, controlledAxis: { next: ['highcharts-y80ahrf-43873']} },
+          crosshair: { width: 2},
+          events: {},
+          showLastLabel: true,
+          minorGridLineWidth: 1,
+          plotLines: [{
+            value: this.top,
+            color: 'red',
+            dashStyle: 'ShortDash',
+            width: 2,
+            label: {
+              text: 'Last quarter maximum'
+            }
+        },
+        {
+            value: this.bottom,
+            color: 'green',
+            dashStyle: 'ShortDash',
+            width: 2,
+            label: {
+                text: 'Last quarter minimum'
+            }
+        }]
+        },
+        {
+          id: 'highcharts-y80ahrf-43873',
+          labels: { align: 'right', x: -3 },
+          title: { text: 'Volume' },
+          top: '65%',
+          height: '35%',
+          offset: 1,
+          lineWidth: 2,
+          gridLineWidth:0,
+          resize: { enabled: true, controlledAxis: { next: [ 'highcharts-y80ahrf-43874'] } },
+        },
+        {
+          id: 'highcharts-y80ahrf-43874',
+          offset: 1,
+          lineWidth:1,
+          opposite: true,
+          title: { text: ''},
+          tickPixelInterval: 40,
+          showLastLabel: true,
+          labels: { align: 'left', x: -3 },
+          angle:10,
+          top: '65%',
+          height: '35%',
+          resize: { enabled: false },
+          gridLineWidth:1,
+          events: {},
+          plotLines: [{
+            value: 20,
+            color: 'green',
+            dashStyle: 'ShortDash',
+            width: 2,
+            label: {
+              text: 'over sold'
+            }
+        },
+        {
+            value: 80,
+            color: 'red',
+            dashStyle: 'ShortDash',
+            width: 2,
+            label: {
+                text: 'over bought'
+            }
+        }]
+        }
+
+      ],
+      legend: { enabled: true },
+      navigation: {
+        bindings: {
+          candlestick: {
+            className: 'highcharts-series-type-candlestick'
+          },
+          ohlc: {
+            className: 'highcharts-series-type-ohlc'
+          },
+          line: {
+            className: 'highcharts-series-type-line'
+          },
+          fullScreen: {
+            className: 'highcharts-full-screen'
+          }
+        }
+      },
+
       series: [
         {
           type: 'candlestick',
@@ -361,6 +431,37 @@ export class StockChartComponent implements OnInit, OnDestroy {
           fillColor: 'red',
           style: { color: 'white' },
         },
+        {
+          linkedTo: 'Price',
+          type: 'sma',
+          marker: {enabled:false},
+          id: 'highcharts-y80ahrf-41719',
+          params: { index: 0, period: 44 },
+          colorIndex: 1,
+          lineWidth: 1,
+          data: []
+        },
+
+        {
+          linkedTo: 'Price',
+          type: 'rsi',
+          id: 'highcharts-y80ahrf-43871',
+          marker: {enabled:false},
+          params: { period: 14, decimals: 4 },
+          lineWidth: 1,
+          yAxis: 'highcharts-y80ahrf-43874',
+          colorIndex: 2,
+          zones: [{
+            value: 20,
+            className: 'zone-0',
+            fillColor:'green'
+        }, {
+            value: 80,
+            className: 'zone-1',
+            fillColor:'red'
+        }],
+          data: []
+        }
 
       ],
     };
@@ -376,8 +477,13 @@ export class StockChartComponent implements OnInit, OnDestroy {
       this.splitFlags = [];
       this.positiveEarningFlags = [];
       this.negativeEarningFlags = [];
+      const highs:number[] = [];
+      const lows:number[] = [];
 
       this.stockPrices.forEach((row) => {
+        highs.push(row.high);
+        lows.push(row.low);
+
         this.ohlc.push([
           new Date(row.date).getTime(),
           row.open,
@@ -445,6 +551,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
 
       this.chartOptions = this.setChartOptions();
 
+
       this.chartOptions.series[0].data = this.ohlc;
       this.chartOptions.series[1].data = this.volume;
       this.chartOptions.series[2].data = this.flags;
@@ -453,51 +560,47 @@ export class StockChartComponent implements OnInit, OnDestroy {
       this.chartOptions.series[5].data = this.positiveEarningFlags;
       this.chartOptions.series[6].data = this.negativeEarningFlags;
 
-      this.portfolioService
-      .getByName(this.stockName)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (data: any[]) => {
-          this.portfolios = data;
-          this.loading = false;
-          this.buyFlags = [];
-          this.sellFlags = [];
-
-          this.portfolios.forEach((row) => {
-
-            this.buyFlags.push({
-              x: new Date(row.buyDate).getTime(),
-              title: 'Buy',
-              text: row.buyPrice,
-            });
-
-            if(row.sellDate) {
-            this.sellFlags.push({
-              x: new Date(row.sellDate).getTime(),
-              title: 'Sell',
-              text: row.sellPrice,
-            });
-          }
-          });
-
-          this.chartOptions.series[7].data = this.buyFlags;
-          this.chartOptions.series[8].data = this.sellFlags;
-          this.updateChart = false;
-          this.updateChart = true;
-
-        },
-        (error) => {
-          this.loading = false;
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error in getting data.',
-          });
-        }
-      );
+      this.setQuarterHighLow(highs, lows);
+      this.setBuySellSignal();
 
       this.updateChart = true;
     }
+  }
+
+  private setQuarterHighLow(highs: number[], lows: number[]) {
+
+    const last90Highs = highs.slice(Math.max(highs.length - 90, 0));
+    const last90Lows = lows.slice(Math.max(lows.length - 90, 0));
+    this.top = Math.max(...last90Highs, 0);
+    this.bottom = Math.min(...last90Lows);
+
+    this.chartOptions.yAxis[0].plotLines[0].value = this.top;
+    this.chartOptions.yAxis[0].plotLines[1].value = this.bottom;
+  }
+
+  private setBuySellSignal() {
+    this.buyFlags = [];
+    this.sellFlags = [];
+
+    this.portfolios.forEach((row) => {
+
+      this.buyFlags.push({
+        x: new Date(row.buyDate).getTime(),
+        title: 'Buy',
+        text: row.buyPrice,
+      });
+
+      if (row.sellDate) {
+        this.sellFlags.push({
+          x: new Date(row.sellDate).getTime(),
+          title: 'Sell',
+          text: row.sellPrice,
+        });
+      }
+    });
+
+    this.chartOptions.series[7].data = this.buyFlags;
+    this.chartOptions.series[8].data = this.sellFlags;
   }
 
   addToWatchList() {
