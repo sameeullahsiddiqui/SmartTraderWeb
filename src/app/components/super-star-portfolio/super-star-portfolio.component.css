@@ -1,0 +1,22 @@
+.watch-badge {
+  border-radius: 2px;
+  padding: .25em .5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .3px;
+}
+
+.watch-badge.status-OPEN{
+  background: #c8e6c9;
+  color: #256029;
+}
+
+.watch-badge.status-triggered {
+  background: #ffcdd2;
+  color: #c63737;
+}
+
+button{
+  margin-right: 5px;
+}

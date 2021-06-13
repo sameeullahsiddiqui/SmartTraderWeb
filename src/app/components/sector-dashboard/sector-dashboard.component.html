@@ -24,27 +24,40 @@
     (sortFunction)="customSort($event)"
     [customSort]="true"
     styleClass="p-datatable-gridlines"
+    [resizableColumns]="true" [autoLayout]="true"
   >
     <ng-template pTemplate="header">
       <tr>
         <th>Date</th>
         <th pSortableColumn="sector">Sector<p-sortIcon field="sector"></p-sortIcon></th>
-        <th pSortableColumn="gain">Gainer<p-sortIcon field="gain"></p-sortIcon></th>
-        <th pSortableColumn="loss">Looser<p-sortIcon field="loss"></p-sortIcon></th>
+        <th pSortableColumn="gainers">Gainer<p-sortIcon field="gainers"></p-sortIcon></th>
+        <th pSortableColumn="loser">Looser<p-sortIcon field="loser"></p-sortIcon></th>
         <th>Nutral</th>
         <th pSortableColumn="total">Total<p-sortIcon field="total"></p-sortIcon></th>
-        <th pSortableColumn="ratio">Ration <p-sortIcon field="ratio"></p-sortIcon></th>
+        <th pSortableColumn="gainerRatio">Ratio <p-sortIcon field="gainerRatio"></p-sortIcon></th>
+        <th pSortableColumn="score">Score <p-sortIcon field="score"></p-sortIcon></th>
+        <th pSortableColumn="day1Gainer">D1 <p-sortIcon field="day1Gainer"></p-sortIcon></th>
+        <th pSortableColumn="day2Gainer">D2 <p-sortIcon field="day2Gainer"></p-sortIcon></th>
+        <th pSortableColumn="day3Gainer">D3 <p-sortIcon field="day3Gainer"></p-sortIcon></th>
+        <th pSortableColumn="day4Gainer">D4 <p-sortIcon field="day4Gainer"></p-sortIcon></th>
+        <th pSortableColumn="day5Gainer">D5 <p-sortIcon field="day5Gainer"></p-sortIcon></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-sector let-rowIndex="rowIndex">
       <tr>
         <td>{{ sector.date | date: "yyyy-MM-dd" }}</td>
         <td style="cursor: pointer; text-decoration: underline;" (click)= "showSector(sector.sector)">{{ sector.sector }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,1)">{{ sector.gain }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,-1)">{{ sector.loss }}</td>
+        <td style="font-weight:bold;color:white;background-color:{{sector.day0Color}};cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,1)">{{ sector.gainers }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,-1)">{{ sector.loser }}</td>
         <td>{{ sector.nutral }}</td>
         <td>{{ sector.total }}</td>
-        <td>{{ (sector.gain/sector.total) * 100 | number:'1.0-0'}}</td>
+        <td>{{ sector.gainerRatio | number:'1.0-0'}}</td>
+        <td>{{ getScore(sector.gainers, sector.day5Gainer) }}</td>
+        <td style='font-weight:bold;color:white;background-color:{{sector.day1Color}}'>{{ sector.day1Gainer }}</td>
+        <td style='font-weight:bold;color:white;background-color:{{sector.day2Color}}'>{{ sector.day2Gainer }}</td>
+        <td style='font-weight:bold;color:white;background-color:{{sector.day3Color}}'>{{ sector.day3Gainer }}</td>
+        <td style='font-weight:bold;color:white;background-color:{{sector.day4Color}}'>{{ sector.day4Gainer }}</td>
+        <td style='font-weight:bold;color:white;background-color:{{sector.day5Color}}'>{{ sector.day5Gainer }}</td>
       </tr>
     </ng-template>
   </p-table>

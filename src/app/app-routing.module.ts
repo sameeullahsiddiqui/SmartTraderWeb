@@ -15,6 +15,7 @@ import { SectorStockComponent } from './components/sector-stock/sector-stock.com
 import { SectorComponent } from './components/sector/sector.component';
 import { StockChartComponent } from './components/stock-chart/stock-chart.component';
 import { StocksComponent } from './components/stocks/stocks.component';
+import { SuperStarPortfolioComponent } from './components/super-star-portfolio/super-star-portfolio.component';
 import { TradesComponent } from './components/trades/trades.component';
 import { WatchListComponent } from './components/watch-list/watch-list.component';
 
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'stockchart/:stockName/:date', component: StockChartComponent},
   { path: 'sectorstock/:sectoryType/:industryName/:date/:gainer', component: SectorStockComponent},
   { path: 'watchlist', component: WatchListComponent},
+  { path: 'superStarPortfolio', component: SuperStarPortfolioComponent},
   { path: 'corporateActions', component: CorporateActionComponent},
   { path: 'trades', component: TradesComponent},
   { path: 'portfolio', component: PortfolioComponent},

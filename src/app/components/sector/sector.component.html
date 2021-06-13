@@ -39,11 +39,11 @@
     <ng-template pTemplate="body" let-sector let-rowIndex="rowIndex">
       <tr>
         <td>{{ sector.date | date: "yyyy-MM-dd" }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,1)">{{ sector.gain }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,-1)">{{ sector.loss }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,1)">{{ sector.gainers }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStocks(sector.sector, sector.date,-1)">{{ sector.loser }}</td>
         <td>{{ sector.nutral }}</td>
         <td>{{ sector.total }}</td>
-        <td>{{ (sector.gain/sector.total) * 100 | number:'1.0-0'}}</td>
+        <td>{{ (sector.gainerRatio) * 100 | number:'1.0-0'}}</td>
       </tr>
     </ng-template>
   </p-table>

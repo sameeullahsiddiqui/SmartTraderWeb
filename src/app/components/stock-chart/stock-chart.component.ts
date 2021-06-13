@@ -37,6 +37,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ComponentFactoryClass } from 'src/app/shared/animations/utils/component-factory';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { SymbolService } from 'src/app/services/symbol.service';
+import { PortfolioService } from 'src/app/services/portfolio.service';
 
 StockModule(Highcharts); // <-- Have to be first
 data(Highcharts);
@@ -86,13 +87,20 @@ export class StockChartComponent implements OnInit, OnDestroy {
   flags: any[] = [];
   bonusFlags: any[] = [];
   splitFlags: any[] = [];
+
   positiveEarningFlags: any[] = [];
   negativeEarningFlags: any[] = [];
+
+  buyFlags: any[] = [];
+  sellFlags: any[] = [];
+
   chartOptions: any;
   results: string[] = [];
+  portfolios: any[] = [];
 
   constructor(
     private stockChartService: StockPriceService,
+    private portfolioService: PortfolioService,
     private messageService: MessageService,
     private watchListService: WatchListService,
     private symbolService: SymbolService,
@@ -315,7 +323,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
           type: 'flags',
           shape: 'squarepin',
           name: 'Earnings',
-          color: 'white',
+          color: 'yellow',
           yAxis: 0,
           data: this.positiveEarningFlags,
           fillColor: 'green',
@@ -331,6 +339,29 @@ export class StockChartComponent implements OnInit, OnDestroy {
           fillColor: 'red',
           style: { color: 'white' },
         },
+        {
+          type: 'flags',
+          shape: 'squarepin',
+          name: 'buy',
+          onSeries: 'Price',
+          color: 'green',
+          yAxis: 0,
+          data: this.buyFlags,
+          fillColor: 'green',
+          style: { color: 'white' },
+        },
+        {
+          type: 'flags',
+          shape: 'squarepin',
+          onSeries: 'Price',
+          name: 'sell',
+          color: 'red',
+          yAxis: 0,
+          data: this.sellFlags,
+          fillColor: 'red',
+          style: { color: 'white' },
+        },
+
       ],
     };
   }
@@ -421,6 +452,49 @@ export class StockChartComponent implements OnInit, OnDestroy {
       this.chartOptions.series[4].data = this.bonusFlags;
       this.chartOptions.series[5].data = this.positiveEarningFlags;
       this.chartOptions.series[6].data = this.negativeEarningFlags;
+
+      this.portfolioService
+      .getByName(this.stockName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data: any[]) => {
+          this.portfolios = data;
+          this.loading = false;
+          this.buyFlags = [];
+          this.sellFlags = [];
+
+          this.portfolios.forEach((row) => {
+
+            this.buyFlags.push({
+              x: new Date(row.buyDate).getTime(),
+              title: 'Buy',
+              text: row.buyPrice,
+            });
+
+            if(row.sellDate) {
+            this.sellFlags.push({
+              x: new Date(row.sellDate).getTime(),
+              title: 'Sell',
+              text: row.sellPrice,
+            });
+          }
+          });
+
+          this.chartOptions.series[7].data = this.buyFlags;
+          this.chartOptions.series[8].data = this.sellFlags;
+          this.updateChart = false;
+          this.updateChart = true;
+
+        },
+        (error) => {
+          this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error in getting data.',
+          });
+        }
+      );
 
       this.updateChart = true;
     }

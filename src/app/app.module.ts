@@ -40,6 +40,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule} from 'primeng/inputnumber';
 import { AutoCompleteModule} from 'primeng/autocomplete';
 
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -56,6 +57,7 @@ import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { BackgroundJobsComponent } from './components/background-jobs/background-jobs.component';
 import { FileCategoryComponent } from './components/file-category/file-category.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { SuperStarPortfolioComponent } from './components/super-star-portfolio/super-star-portfolio.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +77,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
     SectorStockComponent,
     AllStocksComponent,
     WatchListComponent,
+    SuperStarPortfolioComponent,
     CorporateActionComponent,
     TradesComponent,
     PortfolioComponent,
@@ -104,6 +107,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
     SelectButtonModule,
     DropdownModule,
     AutoCompleteModule,
+    InputNumberModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -36,8 +36,8 @@ export class SectorComponent implements OnInit, OnDestroy {
   Highcharts: typeof Highcharts = Highcharts;
   updateChart = false;
   chartOptions: any;
-  gainer: any[] = [];
-  looser: any[] = [];
+  gainers: any[] = [];
+  loser: any[] = [];
   dates: any[] = [];
 
   stateOptions: { label: string; value: string; }[] = [];
@@ -102,19 +102,19 @@ export class SectorComponent implements OnInit, OnDestroy {
   private showHighChart() {
     if (this.isChart) {
       this.setChartOptions();
-      this.gainer = [];
-      this.looser = [];
+      this.gainers = [];
+      this.loser = [];
       this.dates = [];
 
       this.sectors.forEach(row => {
-        this.gainer.push([row.gain]);
-        this.looser.push([row.loss]);
+        this.gainers.push([row.gainers]);
+        this.loser.push([row.loser]);
         this.dates.push([ moment(row.date).format('YYYY-MM-DD')]);
       });
 
 
-      this.chartOptions.series[0].data = this.gainer;
-      //this.chartOptions.series[1].data = this.looser;
+      this.chartOptions.series[0].data = this.gainers;
+      //this.chartOptions.series[1].data = this.loser;
       this.chartOptions.xAxis.categories = this.dates;
       this.updateChart = true;
     }

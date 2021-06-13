@@ -114,4 +114,11 @@ export class SectorDashboardComponent implements OnInit, OnDestroy {
     });
 }
 
+getScore(gainers: number, day5Gainer: number) {
+  if (gainers/day5Gainer > 1.5) {
+    return 'Momentum';
+  } else {
+    return '';
+  }
+}
 }

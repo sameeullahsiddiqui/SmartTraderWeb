@@ -1,1 +1,249 @@
-<p>portfolio works!</p>
+<p-toast></p-toast>
+
+<div class="row">
+  <p-toolbar styleClass="p-mr-2">
+    <ng-template pTemplate="left">
+      <p-selectButton  [options]="statusOptions" [(ngModel)]="activeOnly" optionLabel="label" optionValue="value"></p-selectButton>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <button
+      pButton
+      pRipple
+      label="Search"
+      icon="pi pi-search"
+      class="p-button-rounded p-button-warning p-mr-1 p-col-4"
+      (click)="getPortfolios()"></button>
+
+      <button
+        pButton
+        pRipple
+        label="New"
+        icon="pi pi-plus"
+        class="p-button-rounded p-button-success p-mr-1 p-col-4"
+        (click)="openNew()"
+      ></button>
+
+      <button
+      pButton
+      pRipple
+      label="Sync"
+      icon="pi pi-search"
+      class="p-button-rounded p-button-error p-mr-1 p-col-4"
+      (click)="sync()"></button>
+
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt [value]="portfolioCollection" [rows]="500" [paginator]="true"
+          [(selection)]="selectedPortfolios" [rowHover]="true" dataKey="id"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [showCurrentPageReport]="true"
+          [globalFilterFields]="['symbolName']"
+          >
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        <h5 class="p-m-0">Manage Portfolio</h5>
+        <input #box pInputText type="text" (input)="dt.filterGlobal(box.value, 'contains')" placeholder="Search keyword" />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="symbolName">Symbol<p-sortIcon field="symbolName"></p-sortIcon></th>
+        <th pSortableColumn="quantity">Quantity <p-sortIcon field="quantity"></p-sortIcon></th>
+        <th pSortableColumn="buyDate">B. Date <p-sortIcon field="buyDate"></p-sortIcon></th>
+        <th pSortableColumn="sellDate">S. Date <p-sortIcon field="sellDate"></p-sortIcon></th>
+        <th pSortableColumn="buyPrice">B. Price <p-sortIcon field="buyPrice"></p-sortIcon></th>
+        <th pSortableColumn="sellPrice">S. Price <p-sortIcon field="sellPrice"></p-sortIcon></th>
+        <th pSortableColumn="holdingProfit">Holding Profit <p-sortIcon field="holdingProfit"></p-sortIcon></th>
+        <th pSortableColumn="profitPercent">Profit(%) <p-sortIcon field="profitPercent"></p-sortIcon></th>
+        <th pSortableColumn="tradeDays">Holding Days <p-sortIcon field="tradeDays"></p-sortIcon></th>
+        <th pSortableColumn="buyCommission">Comm. <p-sortIcon field="buyCommission"></p-sortIcon></th>
+        <th pSortableColumn="targetPrice">TP/SL<p-sortIcon field="targetPrice"></p-sortIcon></th>
+        <!-- <th pSortableColumn="breakEvenPrice">BE<p-sortIcon field="breakEvenPrice"></p-sortIcon></th> -->
+        <th pSortableColumn="buyDayReturn">B. Day Return <p-sortIcon field="buyDayReturn"></p-sortIcon></th>
+        <th pSortableColumn="buyComment">B. Comment <p-sortIcon field="buyComment"></p-sortIcon></th>
+        <!-- <th pSortableColumn="buyGrade">B. Grade <p-sortIcon field="buyGrade"></p-sortIcon></th> -->
+        <th pSortableColumn="buyExecutionTime">B. Time <p-sortIcon field="buyExecutionTime"></p-sortIcon></th>
+        <th pSortableColumn="sellExecutionTime">S. Time <p-sortIcon field="sellExecutionTime"></p-sortIcon></th>
+        <!-- <th pSortableColumn="allowedRiskOnBuyDay">Allowed Risk <p-sortIcon field="allowedRiskOnBuyDay"></p-sortIcon></th> -->
+        <!-- <th pSortableColumn="sellDayReturn">Sell Day Return <p-sortIcon field="sellDayReturn"></p-sortIcon></th> -->
+        <!-- <th pSortableColumn="sellComment">Sell Comment <p-sortIcon field="sellComment"></p-sortIcon></th> -->
+        <!-- <th pSortableColumn="sellGrade">Sell Grade <p-sortIcon field="sellGrade"></p-sortIcon></th> -->
+        <!-- <th pSortableColumn="tradeGrade">Trade Grade <p-sortIcon field="tradeGrade"></p-sortIcon></th> -->
+        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+        <th pSortableColumn="currentProfit">Current Profit <p-sortIcon field="currentProfit"></p-sortIcon></th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-portfolio>
+      <tr>
+        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;"
+        (click)= "showStock(portfolio.symbolName, portfolio.buyDate)">
+           {{ portfolio.symbolName }}
+            <button pButton pRipple type="button"
+            icon="pi pi-chart-bar"
+            class="p-button-rounded p-button-secondary p-button-text"
+            (click)="openChart(portfolio)">
+          </button>
+        </td>
+        <td>{{ portfolio.quantity }}</td>
+        <td>{{ portfolio.buyDate | date }}</td>
+        <td>{{ portfolio.sellDate | date  }}</td>
+        <td>{{ portfolio.buyPrice | currency: "INR" }}</td>
+        <td>{{ portfolio.sellPrice | currency: "INR" }}</td>
+        <td
+          [ngClass]="{
+            positive: portfolio.holdingProfit > 0,
+            negative: portfolio.holdingProfit < 0
+            }"
+        >{{ portfolio.holdingProfit | currency: "INR" }}</td>
+        <td
+        [ngClass]="{
+          positive: portfolio.profitPercent > 0,
+          negative: portfolio.profitPercent < 0
+          }"
+        >{{ portfolio.profitPercent }} %</td>
+        <td>{{ portfolio.tradeDays | number }}</td>
+        <td>{{ portfolio.buyCommission | currency: "INR" }}</td>
+        <td>{{ portfolio.targetPrice | currency: "INR" }} / {{ portfolio.stopLossPrice | currency: "INR" }}</td>
+        <!-- <td>{{ portfolio.breakEvenPrice | currency: "INR" }}</td> -->
+        <td>{{ portfolio.buyDayReturn | currency: "INR" }}</td>
+        <td>{{ portfolio.buyComment }}</td>
+        <!-- <td>{{ portfolio.buyGrade }}</td> -->
+        <td>{{ portfolio.buyExecutionTime | date: 'hh:mm'  }}</td>
+        <td>{{ portfolio.sellExecutionTime | date: 'hh:mm'  }}
+          <!-- <td>{{ portfolio.allowedRiskOnBuyDay }}</td> -->
+        <!-- <td>{{ portfolio.sellDayReturn | currency: "INR" }}</td> -->
+        <!-- <td>{{ portfolio.sellComment }}</td> -->
+        <!-- <td>{{ portfolio.sellGrade }}</td> -->
+        <!-- <td>{{ portfolio.tradeGrade }}</td> -->
+        <td>{{ portfolio.status }}</td>
+        <td
+        [ngClass]="{
+          positive: portfolio.currentProfit > 0,
+          negative: portfolio.currentProfit < 0
+          }"
+>{{ portfolio.currentProfit | currency: "INR" }}</td>
+
+        <td class="p-inputgroup">
+          <div class="p-grid">
+          <button
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-2 p-col-4"
+            (click)="editPortfolio(portfolio)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-warning p-col-4"
+            (click)="deletePortfolio(portfolio)"
+          ></button>
+        </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{ portfolioCollection ? portfolioCollection.length : 0 }} Portfolios.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="portfolioDialog"
+  [style]="{ width: '850px' }"
+  header="Portfolio Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="this.formInput">
+      <div class="card">
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-3">
+          <label for="symbolName">Stock</label>
+          <p-autoComplete formControlName="symbolName" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="buyPrice">Buy Price</label>
+          <p-inputNumber formControlName="buyPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="targetPrice">Target Price</label>
+          <p-inputNumber formControlName="targetPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="stopLossPrice">Stop Loss</label>
+          <p-inputNumber formControlName="stopLossPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="buyCommission">Brokarage</label>
+          <p-inputNumber formControlName="buyCommission" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="buyDate">Buy Date</label>
+          <p-calendar [disabledDays]="[0, 6]" id="buyDate" formControlName="buyDate" [showIcon]="true" inputId="icon" ></p-calendar>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="buyExecutionTime">Buy Time</label>
+          <p-calendar [disabledDays]="[0, 6]"  [showTime]="true" id="buyExecutionTime"  formControlName="buyExecutionTime" [showIcon]="true" inputId="icon" ></p-calendar>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="status">Status:</label>
+          <p-selectButton  [options]="statusOptions" formControlName="status" optionLabel="label" optionValue="value"></p-selectButton>
+        </div>
+
+        <div class="p-field p-col-12 p-md-3">
+          <label for="sellPrice">Sell Price</label>
+          <p-inputNumber formControlName="sellPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="sellDate">Sell Date</label>
+          <p-calendar [disabledDays]="[0, 6]" id="sellDate" formControlName="sellDate" [showIcon]="true" inputId="icon" ></p-calendar>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
+          <label for="sellExecutionTime">Sell Time</label>
+          <p-calendar [disabledDays]="[0, 6]"  [showTime]="true" id="sellExecutionTime" formControlName="sellExecutionTime" [showIcon]="true" inputId="icon" ></p-calendar>
+        </div>
+
+        <div class="p-field col-sm-12">
+          <label for="buyComment">Comments</label>
+          <textarea id="buyComment" rows="4" pInputTextarea formControlName="buyComment"></textarea>
+        </div>
+     </div>
+
+  </div>
+
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="savePortfolio()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
