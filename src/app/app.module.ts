@@ -42,6 +42,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule} from 'primeng/inputnumber';
 import { AutoCompleteModule} from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
+
 
 import { HighchartsChartModule } from 'highcharts-angular';
 import { StockChartComponent } from './components/stock-chart/stock-chart.component';
@@ -58,6 +60,7 @@ import { BackgroundJobsComponent } from './components/background-jobs/background
 import { FileCategoryComponent } from './components/file-category/file-category.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { SuperStarPortfolioComponent } from './components/super-star-portfolio/super-star-portfolio.component';
+import { EarningReportComponent } from './components/earning-report/earning-report.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +87,7 @@ import { SuperStarPortfolioComponent } from './components/super-star-portfolio/s
     BackgroundJobsComponent,
     FileCategoryComponent,
     TooltipComponent,
+    EarningReportComponent
   ],
   imports: [
     BrowserModule,
@@ -108,6 +112,7 @@ import { SuperStarPortfolioComponent } from './components/super-star-portfolio/s
     DropdownModule,
     AutoCompleteModule,
     InputNumberModule,
+    RadioButtonModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

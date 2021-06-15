@@ -171,6 +171,10 @@
           <p-autoComplete formControlName="symbolName" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
         </div>
         <div class="p-field p-col-12 p-md-3">
+          <label for="quantity">Quantity</label>
+          <p-inputNumber formControlName="quantity"></p-inputNumber>
+        </div>
+        <div class="p-field p-col-12 p-md-3">
           <label for="buyPrice">Buy Price</label>
           <p-inputNumber formControlName="buyPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
         </div>
@@ -202,15 +206,15 @@
           <p-selectButton  [options]="statusOptions" formControlName="status" optionLabel="label" optionValue="value"></p-selectButton>
         </div>
 
-        <div class="p-field p-col-12 p-md-3">
+        <div class="p-field p-col-12 p-md-3" *ngIf='selectedPortfolio.portfolioId'>
           <label for="sellPrice">Sell Price</label>
           <p-inputNumber formControlName="sellPrice" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
         </div>
-        <div class="p-field p-col-12 p-md-3">
+        <div class="p-field p-col-12 p-md-3" *ngIf='selectedPortfolio.portfolioId'>
           <label for="sellDate">Sell Date</label>
-          <p-calendar [disabledDays]="[0, 6]" id="sellDate" formControlName="sellDate" [showIcon]="true" inputId="icon" ></p-calendar>
+          <p-calendar [disabledDays]="[0, 6]" id="sellDate" [showButtonBar]="true" formControlName="sellDate" [showIcon]="true" inputId="icon" ></p-calendar>
         </div>
-        <div class="p-field p-col-12 p-md-3">
+        <div class="p-field p-col-12 p-md-3" *ngIf='selectedPortfolio.portfolioId'>
           <label for="sellExecutionTime">Sell Time</label>
           <p-calendar [disabledDays]="[0, 6]"  [showTime]="true" id="sellExecutionTime" formControlName="sellExecutionTime" [showIcon]="true" inputId="icon" ></p-calendar>
         </div>
@@ -246,4 +250,4 @@
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+<p-confirmDialog [style]="{ width: '650px' }"></p-confirmDialog>

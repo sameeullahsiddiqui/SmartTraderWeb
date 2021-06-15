@@ -1,0 +1,142 @@
+<p-toast></p-toast>
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+<p-toolbar styleClass="p-mr-2">
+  <ng-template pTemplate="left">
+    <div class="row">
+      <div class="col-sm-7">
+        <label>Quarter:</label>
+         <div class="p-d-flex p-flex-row">
+          <div *ngFor="let category of quarterOptions" class="p-field-checkbox">
+            <p-radioButton [inputId]="category.value" name="quarter" [value]="category"
+               [(ngModel)]="selectedQuarter" (onClick) = "onQuarterChange($event)"
+               [label] = "category.label" styleClass="radio-style" class="p-col">
+            </p-radioButton>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+        <label>Interval:</label>
+          <div class="p-d-flex p-flex-row">
+          <div *ngFor="let category of intervalOptions" class="p-field-checkbox">
+            <p-radioButton [inputId]="category.value" name="interval" [value]="category"
+            [(ngModel)]="selectedInterval" (onClick) = "onIntervalChange($event)"
+            [label] = "category.label" styleClass="radio-style" class="p-col">
+          </p-radioButton>
+        </div>
+      </div>
+    </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="right">
+    <div class="row">
+    <div class="col-md-12">
+      <label for="searchDate">Date: </label>
+      <p-calendar [disabledDays]="[0, 6]" [(ngModel)]="searchDate" [showIcon]="true" inputId="icon"></p-calendar>
+      <button pButton pRipple label="Search" icon="pi pi-search" class="p-button-warning p-mr-2" (click)="searchRecords()"></button>
+    </div>
+  </div>
+  </ng-template>
+</p-toolbar>
+
+
+<div class="card">
+  <p-table
+    #dt1
+    [value]="earningReports"
+    styleClass="p-datatable-gridlines p-datatable-lg"
+    [loading]="loading"
+    [showCurrentPageReport]="true"
+	  [globalFilterFields]="['company','currentQuarter']">
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="4">
+          <input #box pInputText type="text" (input)="dt1.filterGlobal(box.value, 'contains')" placeholder="Search keyword" />
+        </th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isQoQ || isAll">Sales(QoQ)</th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isYoY || isAll">Sales(YoY)</th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isQoQ || isAll">Gross Profit(QoQ)</th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isYoY || isAll">Gross Profit(YoY)</th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isQoQ || isAll">Net Profit(QoQ)</th>
+        <th [attr.colspan]="getSpanCount()" *ngIf="isYoY || isAll">Net Profit(YoY)</th>
+      </tr>
+      <tr>
+        <th pSortableColumn="date">Date<p-sortIcon field="date"></p-sortIcon></th>
+        <th pSortableColumn="year">Year<p-sortIcon field="year"></p-sortIcon></th>
+        <th pSortableColumn="company">Company<p-sortIcon field="company"></p-sortIcon></th>
+        <th pSortableColumn="currentQuarter">Current Quarter<p-sortIcon field="currentQuarter"></p-sortIcon></th>
+
+        <th pSortableColumn="qoQSales_Q1" *ngIf="isQoQVisible('Q1')">Q1<p-sortIcon field="qoQSales_Q1"></p-sortIcon></th>
+        <th pSortableColumn="qoQSales_Q2" *ngIf="isQoQVisible('Q2')">Q2<p-sortIcon field="qoQSales_Q2"></p-sortIcon></th>
+        <th pSortableColumn="qoQSales_Q3" *ngIf="isQoQVisible('Q3')">Q3<p-sortIcon field="qoQSales_Q3"></p-sortIcon></th>
+        <th pSortableColumn="qoQSales_Q4" *ngIf="isQoQVisible('Q4')">Q4<p-sortIcon field="qoQSales_Q4"></p-sortIcon></th>
+
+        <th pSortableColumn="yoYSales_Q1" *ngIf="isYoYVisible('Q1')">Q1<p-sortIcon field="yoYSales_Q1"></p-sortIcon></th>
+        <th pSortableColumn="yoYSales_Q2" *ngIf="isYoYVisible('Q2')">Q2<p-sortIcon field="yoYSales_Q2"></p-sortIcon></th>
+        <th pSortableColumn="yoYSales_Q3" *ngIf="isYoYVisible('Q3')">Q3<p-sortIcon field="yoYSales_Q3"></p-sortIcon></th>
+        <th pSortableColumn="yoYSales_Q4" *ngIf="isYoYVisible('Q4')">Q4<p-sortIcon field="yoYSales_Q4"></p-sortIcon></th>
+
+        <th pSortableColumn="qoQNetProfit_Q1" *ngIf="isQoQVisible('Q1')">Q1<p-sortIcon field="qoQNetProfit_Q1"></p-sortIcon></th>
+        <th pSortableColumn="qoQNetProfit_Q2" *ngIf="isQoQVisible('Q2')">Q2<p-sortIcon field="qoQNetProfit_Q2"></p-sortIcon></th>
+        <th pSortableColumn="qoQNetProfit_Q3" *ngIf="isQoQVisible('Q3')">Q3<p-sortIcon field="qoQNetProfit_Q3"></p-sortIcon></th>
+        <th pSortableColumn="qoQNetProfit_Q4" *ngIf="isQoQVisible('Q4')">Q4<p-sortIcon field="qoQNetProfit_Q4"></p-sortIcon></th>
+
+        <th pSortableColumn="yoYNetProfit_Q1" *ngIf="isYoYVisible('Q1')">Q1<p-sortIcon field="yoYNetProfit_Q1"></p-sortIcon></th>
+        <th pSortableColumn="yoYNetProfit_Q2" *ngIf="isYoYVisible('Q2')">Q2<p-sortIcon field="yoYNetProfit_Q2"></p-sortIcon></th>
+        <th pSortableColumn="yoYNetProfit_Q3" *ngIf="isYoYVisible('Q3')">Q3<p-sortIcon field="yoYNetProfit_Q3"></p-sortIcon></th>
+        <th pSortableColumn="yoYNetProfit_Q4" *ngIf="isYoYVisible('Q4')">Q4<p-sortIcon field="yoYNetProfit_Q4"></p-sortIcon></th>
+
+        <th pSortableColumn="qoQGrossProfit_Q1" *ngIf="isQoQVisible('Q1')">Q1<p-sortIcon field="qoQGrossProfit_Q1"></p-sortIcon></th>
+        <th pSortableColumn="qoQGrossProfit_Q2" *ngIf="isQoQVisible('Q2')">Q2<p-sortIcon field="qoQGrossProfit_Q2"></p-sortIcon></th>
+        <th pSortableColumn="qoQGrossProfit_Q3" *ngIf="isQoQVisible('Q3')">Q3<p-sortIcon field="qoQGrossProfit_Q3"></p-sortIcon></th>
+        <th pSortableColumn="qoQGrossProfit_Q4" *ngIf="isQoQVisible('Q4')">Q4<p-sortIcon field="qoQGrossProfit_Q4"></p-sortIcon></th>
+
+        <th pSortableColumn="yoYGrossProfit_Q1" *ngIf="isYoYVisible('Q1')">Q1<p-sortIcon field="yoYGrossProfit_Q1"></p-sortIcon></th>
+        <th pSortableColumn="yoYGrossProfit_Q2" *ngIf="isYoYVisible('Q2')">Q2<p-sortIcon field="yoYGrossProfit_Q2"></p-sortIcon></th>
+        <th pSortableColumn="yoYGrossProfit_Q3" *ngIf="isYoYVisible('Q3')">Q3<p-sortIcon field="yoYGrossProfit_Q3"></p-sortIcon></th>
+        <th pSortableColumn="yoYGrossProfit_Q4" *ngIf="isYoYVisible('Q4')">Q4<p-sortIcon field="yoYGrossProfit_Q4"></p-sortIcon></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-earningReport let-rowIndex="rowIndex">
+      <tr>
+        <td> {{ earningReport.date | date: "yyyy-MM-dd" }}</td>
+        <td> {{ earningReport.year }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStock(earningReport.company)">{{ earningReport.company }}</td>
+        <td> {{ earningReport.currentQuarter }}</td>
+
+        <td *ngIf="isQoQVisible('Q1')" [ngClass]="{ positive: earningReport.qoQSales_Q1 > 0, negative: earningReport.qoQSales_Q1 < 0 }"> {{ earningReport.qoQSales_Q1}} </td>
+        <td *ngIf="isQoQVisible('Q2')" [ngClass]="{ positive: earningReport.qoQSales_Q2 > 0, negative: earningReport.qoQSales_Q2 < 0 }">  {{ earningReport.qoQSales_Q2}} </td>
+        <td *ngIf="isQoQVisible('Q3')" [ngClass]="{ positive: earningReport.qoQSales_Q3 > 0, negative: earningReport.qoQSales_Q3 < 0 }">  {{ earningReport.qoQSales_Q3}} </td>
+        <td *ngIf="isQoQVisible('Q4')" [ngClass]="{ positive: earningReport.qoQSales_Q4 > 0, negative: earningReport.qoQSales_Q4 < 0 }">  {{ earningReport.qoQSales_Q4}} </td>
+
+        <td *ngIf="isYoYVisible('Q1')" [ngClass]="{ positive: earningReport.yoYSales_Q1 > 0, negative: earningReport.yoYSales_Q1 < 0 }">  {{ earningReport.yoYSales_Q1}} </td>
+        <td *ngIf="isYoYVisible('Q2')" [ngClass]="{ positive: earningReport.yoYSales_Q2 > 0, negative: earningReport.yoYSales_Q2 < 0 }">  {{ earningReport.yoYSales_Q2}} </td>
+        <td *ngIf="isYoYVisible('Q3')" [ngClass]="{ positive: earningReport.yoYSales_Q3 > 0, negative: earningReport.yoYSales_Q3 < 0 }">  {{ earningReport.yoYSales_Q3}} </td>
+        <td *ngIf="isYoYVisible('Q4')" [ngClass]="{ positive: earningReport.yoYSales_Q4 > 0, negative: earningReport.yoYSales_Q4 < 0 }">  {{ earningReport.yoYSales_Q4}} </td>
+
+        <td *ngIf="isQoQVisible('Q1')" [ngClass]="{ positive: earningReport.qoQGrossProfit_Q1 > 0, negative: earningReport.qoQGrossProfit_Q1 < 0 }">  {{ earningReport.qoQGrossProfit_Q1}} </td>
+        <td *ngIf="isQoQVisible('Q2')" [ngClass]="{ positive: earningReport.qoQGrossProfit_Q2 > 0, negative: earningReport.qoQGrossProfit_Q2 < 0 }">  {{ earningReport.qoQGrossProfit_Q2}} </td>
+        <td *ngIf="isQoQVisible('Q3')" [ngClass]="{ positive: earningReport.qoQGrossProfit_Q3 > 0, negative: earningReport.qoQGrossProfit_Q3 < 0 }">  {{ earningReport.qoQGrossProfit_Q3}} </td>
+        <td *ngIf="isQoQVisible('Q4')" [ngClass]="{ positive: earningReport.qoQGrossProfit_Q4 > 0, negative: earningReport.qoQGrossProfit_Q4 < 0 }">  {{ earningReport.qoQGrossProfit_Q4}} </td>
+
+        <td *ngIf="isYoYVisible('Q1')" [ngClass]="{ positive: earningReport.yoYGrossProfit_Q1 > 0, negative: earningReport.yoYGrossProfit_Q1 < 0 }">  {{ earningReport.yoYGrossProfit_Q1}} </td>
+        <td *ngIf="isYoYVisible('Q2')" [ngClass]="{ positive: earningReport.yoYGrossProfit_Q2 > 0, negative: earningReport.yoYGrossProfit_Q2 < 0 }">  {{ earningReport.yoYGrossProfit_Q2}} </td>
+        <td *ngIf="isYoYVisible('Q3')" [ngClass]="{ positive: earningReport.yoYGrossProfit_Q3 > 0, negative: earningReport.yoYGrossProfit_Q3 < 0 }">  {{ earningReport.yoYGrossProfit_Q3}} </td>
+        <td *ngIf="isYoYVisible('Q4')" [ngClass]="{ positive: earningReport.yoYGrossProfit_Q4 > 0, negative: earningReport.yoYGrossProfit_Q4 < 0 }">  {{ earningReport.yoYGrossProfit_Q4}} </td>
+
+        <td *ngIf="isQoQVisible('Q1')" [ngClass]="{ positive: earningReport.qoQNetProfit_Q1 > 0, negative: earningReport.qoQNetProfit_Q1 < 0 }"> {{ earningReport.qoQNetProfit_Q1}} </td>
+        <td *ngIf="isQoQVisible('Q2')" [ngClass]="{ positive: earningReport.qoQNetProfit_Q2 > 0, negative: earningReport.qoQNetProfit_Q2 < 0 }"> {{ earningReport.qoQNetProfit_Q2}} </td>
+        <td *ngIf="isQoQVisible('Q3')" [ngClass]="{ positive: earningReport.qoQNetProfit_Q3 > 0, negative: earningReport.qoQNetProfit_Q3 < 0 }"> {{ earningReport.qoQNetProfit_Q3}} </td>
+        <td *ngIf="isQoQVisible('Q4')" [ngClass]="{ positive: earningReport.qoQNetProfit_Q4 > 0, negative: earningReport.qoQNetProfit_Q4 < 0 }"> {{ earningReport.qoQNetProfit_Q4}} </td>
+
+        <td *ngIf="isYoYVisible('Q1')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q1 > 0, negative: earningReport.yoYNetProfit_Q1 < 0 }">  {{ earningReport.yoYNetProfit_Q1}} </td>
+        <td *ngIf="isYoYVisible('Q2')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q2 > 0, negative: earningReport.yoYNetProfit_Q2 < 0 }">  {{ earningReport.yoYNetProfit_Q2}} </td>
+        <td *ngIf="isYoYVisible('Q3')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q3 > 0, negative: earningReport.yoYNetProfit_Q3 < 0 }">  {{ earningReport.yoYNetProfit_Q3}} </td>
+        <td *ngIf="isYoYVisible('Q4')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q4 > 0, negative: earningReport.yoYNetProfit_Q4 < 0 }">  {{ earningReport.yoYNetProfit_Q4}} </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

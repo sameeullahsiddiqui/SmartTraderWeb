@@ -5,6 +5,7 @@ import { AllStocksComponent } from './components/all-stocks/all-stocks.component
 import { BackgroundJobsComponent } from './components/background-jobs/background-jobs.component';
 import { CorporateActionComponent } from './components/corporate-action/corporate-action.component';
 import { DeliveryComponent } from './components/delivery/delivery.component';
+import { EarningReportComponent } from './components/earning-report/earning-report.component';
 import { FileCategoryComponent } from './components/file-category/file-category.component';
 import { HomeComponent } from './components/home/home.component';
 import { IndustryDashboardComponent } from './components/industry-dashboard/industry-dashboard.component';
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'watchlist', component: WatchListComponent},
   { path: 'superStarPortfolio', component: SuperStarPortfolioComponent},
   { path: 'corporateActions', component: CorporateActionComponent},
+  { path: 'earningReports', component: EarningReportComponent},
   { path: 'trades', component: TradesComponent},
   { path: 'portfolio', component: PortfolioComponent},
   { path:'backgroundJobs', component: BackgroundJobsComponent},

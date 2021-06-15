@@ -1,0 +1,61 @@
+export class Symbols {
+  symbolId: number;
+  code: string;
+  ticker: string;
+  instrument: string;
+  name: string;
+  status: boolean;
+  facevalue: number;
+  isin: string;
+  sector: string;
+  currency: string;
+  flag: boolean;
+  isNifty50?: boolean;
+  isNiftyNext50?: boolean;
+  isNifty100?: boolean;
+  isNifty200?: boolean;
+  isShariaComplience: boolean;
+  industry: string;
+  debt: number;
+  totalAssets: number;
+  interest: number;
+  netProfit: number;
+  cashByMarketCap: number;
+  margin: number;
+  marketCap: number;
+  tradeReceivables: number;
+  sales: number;
+  cashEndOfLastYear: number;
+  instrumentToken: number;
+
+  constructor() {
+    this.symbolId = 0;
+    this.code = '';
+    this.ticker = '';
+    this.instrument = '';
+    this.name = '';
+    this.status = false;
+    this.facevalue = 0;
+    this.isin = '';
+    this.sector = '';
+    this.currency = '';
+    this.flag = false;
+    this.isNifty50 = false;
+    this.isNiftyNext50 = false;
+    this.isNifty100 = false;
+    this.isNifty200 = false;
+    this.isShariaComplience = false;
+    this.industry = '';
+    this.debt = 0;
+    this.totalAssets = 0;
+    this.interest = 0;
+    this.netProfit = 0;
+    this.cashByMarketCap = 0;
+    this.margin = 0;
+    this.marketCap = 0;
+    this.tradeReceivables = 0;
+    this.sales = 0;
+    this.cashEndOfLastYear = 0;
+    this.instrumentToken = 0;
+  }
+}

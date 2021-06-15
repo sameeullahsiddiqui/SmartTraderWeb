@@ -182,6 +182,7 @@ export class PortfolioComponent implements OnInit {
     this.selectedPortfolio = new Portfolio();
     this.submitted = false;
     this.portfolioDialog = true;
+    this.formInput.reset();
   }
 
   // deleteSelectedPortfolios() {
@@ -249,8 +250,6 @@ export class PortfolioComponent implements OnInit {
   }
 
   savePortfolio() {
-    this.submitted = true;
-
     if (this.selectedPortfolio.portfolioId) {
       this.selectedPortfolio.portfolioId= this.formInput.controls[this.properties.portfolioId].value;
       this.selectedPortfolio.portfolioName= this.formInput.controls[this.properties.portfolioName].value;
@@ -258,9 +257,6 @@ export class PortfolioComponent implements OnInit {
       this.selectedPortfolio.buyDate= this.formInput.controls[this.properties.buyDate].value;
       this.selectedPortfolio.buyPrice= this.formInput.controls[this.properties.buyPrice].value;
       this.selectedPortfolio.buyCommission= this.formInput.controls[this.properties.buyCommission].value;
-      this.selectedPortfolio.sellDate= this.formInput.controls[this.properties.sellDate].value;
-      this.selectedPortfolio.sellPrice= this.formInput.controls[this.properties.sellPrice].value;
-      this.selectedPortfolio.sellCommission= this.formInput.controls[this.properties.sellCommission].value;
       this.selectedPortfolio.targetPrice= this.formInput.controls[this.properties.targetPrice].value;
       this.selectedPortfolio.stopLossPrice= this.formInput.controls[this.properties.stopLossPrice].value;
       this.selectedPortfolio.breakEvenPrice= this.formInput.controls[this.properties.breakEvenPrice].value;
@@ -270,15 +266,25 @@ export class PortfolioComponent implements OnInit {
       this.selectedPortfolio.buyClose= this.formInput.controls[this.properties.buyClose].value;
       this.selectedPortfolio.buyDayReturn= this.formInput.controls[this.properties.buyDayReturn].value;
       this.selectedPortfolio.buyComment= this.formInput.controls[this.properties.buyComment].value;
+
       this.selectedPortfolio.buyGrade= this.formInput.controls[this.properties.buyGrade].value;
-      this.selectedPortfolio.sellOpen= this.formInput.controls[this.properties.sellOpen].value;
-      this.selectedPortfolio.sellHigh= this.formInput.controls[this.properties.sellHigh].value;
-      this.selectedPortfolio.sellLow= this.formInput.controls[this.properties.sellLow].value;
-      this.selectedPortfolio.sellClose= this.formInput.controls[this.properties.sellClose].value;
-      this.selectedPortfolio.sellDayReturn= this.formInput.controls[this.properties.sellDayReturn].value;
-      this.selectedPortfolio.sellComment= this.formInput.controls[this.properties.sellComment].value;
-      this.selectedPortfolio.sellGrade= this.formInput.controls[this.properties.sellGrade].value;
-      this.selectedPortfolio.tradeGrade= this.formInput.controls[this.properties.tradeGrade].value;
+
+      this.selectedPortfolio.sellPrice= this.formInput.controls[this.properties.sellPrice].value;
+
+      if (this.selectedPortfolio.sellPrice && this.selectedPortfolio.sellPrice >0) {
+        this.selectedPortfolio.sellDate= this.formInput.controls[this.properties.sellDate].value;
+        this.selectedPortfolio.sellCommission= this.formInput.controls[this.properties.sellCommission].value;
+        this.selectedPortfolio.sellOpen= this.formInput.controls[this.properties.sellOpen].value;
+        this.selectedPortfolio.sellHigh= this.formInput.controls[this.properties.sellHigh].value;
+        this.selectedPortfolio.sellLow= this.formInput.controls[this.properties.sellLow].value;
+        this.selectedPortfolio.sellClose= this.formInput.controls[this.properties.sellClose].value;
+        this.selectedPortfolio.sellDayReturn= this.formInput.controls[this.properties.sellDayReturn].value;
+        this.selectedPortfolio.sellComment= this.formInput.controls[this.properties.sellComment].value;
+        this.selectedPortfolio.sellGrade= this.formInput.controls[this.properties.sellGrade].value;
+        this.selectedPortfolio.tradeGrade= this.formInput.controls[this.properties.tradeGrade].value;
+        this.selectedPortfolio.sellExecutionTime = this.formInput.controls[this.properties.sellExecutionTime].value;
+      }
+
       this.selectedPortfolio.tradeDays= this.formInput.controls[this.properties.tradeDays].value;
       this.selectedPortfolio.status= this.formInput.controls[this.properties.status].value;
       this.selectedPortfolio.currentProfit= this.formInput.controls[this.properties.currentProfit].value;
@@ -288,8 +294,6 @@ export class PortfolioComponent implements OnInit {
       this.selectedPortfolio.profitPercent= this.formInput.controls[this.properties.profitPercent].value;
       this.selectedPortfolio.symbolName= this.formInput.controls[this.properties.symbolName].value;
       this.selectedPortfolio.buyExecutionTime= this.formInput.controls[this.properties.buyExecutionTime].value;
-      this.selectedPortfolio.sellExecutionTime= this.formInput.controls[this.properties.sellExecutionTime].value;
-
 
       this.portfolioService.update(this.selectedPortfolio.portfolioId,this.selectedPortfolio
       ).subscribe(
@@ -301,7 +305,11 @@ export class PortfolioComponent implements OnInit {
             life: 3000,
           });
 
+          this.portfolioDialog = false;
+          this.selectedPortfolio = new Portfolio();
+          this.formInput.reset();
           this.submitted = true;
+
           this.getPortfolios();
         },
         (error) => {
@@ -315,44 +323,30 @@ export class PortfolioComponent implements OnInit {
       );
     } else {
 
-      this.selectedPortfolio.portfolioId = '';
+      this.selectedPortfolio.portfolioId = '4862E53D-1A7E-4546-A2C0-013FF76E547F';
       this.selectedPortfolio.portfolioName= this.formInput.controls[this.properties.portfolioName].value;
       this.selectedPortfolio.quantity= this.formInput.controls[this.properties.quantity].value;
       this.selectedPortfolio.buyDate= this.formInput.controls[this.properties.buyDate].value;
       this.selectedPortfolio.buyPrice= this.formInput.controls[this.properties.buyPrice].value;
       this.selectedPortfolio.buyCommission= this.formInput.controls[this.properties.buyCommission].value;
-      this.selectedPortfolio.sellDate= this.formInput.controls[this.properties.sellDate].value;
-      this.selectedPortfolio.sellPrice= this.formInput.controls[this.properties.sellPrice].value;
-      this.selectedPortfolio.sellCommission= this.formInput.controls[this.properties.sellCommission].value;
       this.selectedPortfolio.targetPrice= this.formInput.controls[this.properties.targetPrice].value;
       this.selectedPortfolio.stopLossPrice= this.formInput.controls[this.properties.stopLossPrice].value;
       this.selectedPortfolio.breakEvenPrice= this.formInput.controls[this.properties.breakEvenPrice].value;
-      this.selectedPortfolio.buyOpen= this.formInput.controls[this.properties.buyOpen].value;
-      this.selectedPortfolio.buyHigh= this.formInput.controls[this.properties.buyHigh].value;
-      this.selectedPortfolio.buyLow= this.formInput.controls[this.properties.buyLow].value;
-      this.selectedPortfolio.buyClose= this.formInput.controls[this.properties.buyClose].value;
-      this.selectedPortfolio.buyDayReturn= this.formInput.controls[this.properties.buyDayReturn].value;
-      this.selectedPortfolio.buyComment= this.formInput.controls[this.properties.buyComment].value;
-      this.selectedPortfolio.buyGrade= this.formInput.controls[this.properties.buyGrade].value;
-      this.selectedPortfolio.sellOpen= this.formInput.controls[this.properties.sellOpen].value;
-      this.selectedPortfolio.sellHigh= this.formInput.controls[this.properties.sellHigh].value;
-      this.selectedPortfolio.sellLow= this.formInput.controls[this.properties.sellLow].value;
-      this.selectedPortfolio.sellClose= this.formInput.controls[this.properties.sellClose].value;
-      this.selectedPortfolio.sellDayReturn= this.formInput.controls[this.properties.sellDayReturn].value;
-      this.selectedPortfolio.sellComment= this.formInput.controls[this.properties.sellComment].value;
-      this.selectedPortfolio.sellGrade= this.formInput.controls[this.properties.sellGrade].value;
-      this.selectedPortfolio.tradeGrade= this.formInput.controls[this.properties.tradeGrade].value;
-      this.selectedPortfolio.tradeDays= this.formInput.controls[this.properties.tradeDays].value;
-      this.selectedPortfolio.status= this.formInput.controls[this.properties.status].value;
-      this.selectedPortfolio.currentProfit= this.formInput.controls[this.properties.currentProfit].value;
       this.selectedPortfolio.tradeType= this.formInput.controls[this.properties.tradeType].value;
-      this.selectedPortfolio.allowedRiskOnBuyDay= this.formInput.controls[this.properties.allowedRiskOnBuyDay].value;
-      this.selectedPortfolio.holdingProfit= this.formInput.controls[this.properties.holdingProfit].value;
-      this.selectedPortfolio.profitPercent= this.formInput.controls[this.properties.profitPercent].value;
+      this.selectedPortfolio.buyComment= this.formInput.controls[this.properties.buyComment].value;
+      this.selectedPortfolio.status= this.formInput.controls[this.properties.status].value;
       this.selectedPortfolio.symbolName= this.formInput.controls[this.properties.symbolName].value;
       this.selectedPortfolio.buyExecutionTime= this.formInput.controls[this.properties.buyExecutionTime].value;
-      this.selectedPortfolio.sellExecutionTime= this.formInput.controls[this.properties.sellExecutionTime].value;
 
+      // this.selectedPortfolio.sellDate= this.formInput.controls[this.properties.sellDate].value;
+      // this.selectedPortfolio.sellPrice= this.formInput.controls[this.properties.sellPrice].value;
+      // this.selectedPortfolio.sellCommission= this.formInput.controls[this.properties.sellCommission].value;
+      // this.selectedPortfolio.tradeDays= this.formInput.controls[this.properties.tradeDays].value;
+      // this.selectedPortfolio.currentProfit= this.formInput.controls[this.properties.currentProfit].value;
+      // this.selectedPortfolio.allowedRiskOnBuyDay= this.formInput.controls[this.properties.allowedRiskOnBuyDay].value;
+      // this.selectedPortfolio.holdingProfit= this.formInput.controls[this.properties.holdingProfit].value;
+      // this.selectedPortfolio.profitPercent= this.formInput.controls[this.properties.profitPercent].value;
+      // this.selectedPortfolio.sellExecutionTime= this.formInput.controls[this.properties.sellExecutionTime].value;
 
       this.portfolioService.create(this.selectedPortfolio).subscribe(
         (response) => {
@@ -363,7 +357,11 @@ export class PortfolioComponent implements OnInit {
             life: 3000,
           });
 
+          this.portfolioDialog = false;
+          this.selectedPortfolio = new Portfolio();
+          this.formInput.reset();
           this.submitted = true;
+
           this.getPortfolios();
         },
         (error) => {
@@ -377,8 +375,7 @@ export class PortfolioComponent implements OnInit {
       );
     }
 
-    this.portfolioDialog = false;
-    this.selectedPortfolio = new Portfolio();
+
   }
 
   openChart(portfolio: Portfolio) {
