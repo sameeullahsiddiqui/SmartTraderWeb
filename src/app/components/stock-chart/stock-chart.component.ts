@@ -38,6 +38,7 @@ import { ComponentFactoryClass } from 'src/app/shared/animations/utils/component
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { SymbolService } from 'src/app/services/symbol.service';
 import { PortfolioService } from 'src/app/services/portfolio.service';
+import { YAxisPlotLinesOptions } from 'highcharts';
 
 StockModule(Highcharts); // <-- Have to be first
 data(Highcharts);
@@ -100,6 +101,24 @@ export class StockChartComponent implements OnInit, OnDestroy {
   bottom: number | undefined;
   top: number | undefined;
 
+  q1HighLine: YAxisPlotLinesOptions = {};
+  q2HighLine: YAxisPlotLinesOptions = {};
+  q3HighLine: YAxisPlotLinesOptions = {};
+  q4HighLine: YAxisPlotLinesOptions = {};
+
+  q1LowLine: YAxisPlotLinesOptions = {};
+  q2LowLine: YAxisPlotLinesOptions = {};
+  q3LowLine: YAxisPlotLinesOptions = {};
+  q4LowLine: YAxisPlotLinesOptions = {};
+  isQ1HighVisible = true;
+  isQ2HighVisible = false;
+  isQ3HighVisible = false;
+  isQ4HighVisible = false;
+  isQ1LowVisible = true;
+  isQ2LowVisible = false;
+  isQ3LowVisible = false;
+  isQ4LowVisible = false;
+
   constructor(
     private stockChartService: StockPriceService,
     private portfolioService: PortfolioService,
@@ -131,6 +150,92 @@ export class StockChartComponent implements OnInit, OnDestroy {
       }
     });
     this.primengConfig.ripple = true;
+
+    this.setHighLowLines();
+  }
+
+  private setHighLowLines() {
+    this.isQ1HighVisible = true;
+    this.isQ2HighVisible = false;
+    this.isQ3HighVisible = false;
+    this.isQ4HighVisible = false;
+
+    this.isQ1LowVisible = true;
+    this.isQ2LowVisible = false;
+    this.isQ3LowVisible = false;
+    this.isQ4LowVisible = false;
+
+    this.q1HighLine = {
+      value: 0,
+      id: 'Q1High',
+      color: 'red',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q1 high' },
+    };
+
+    this.q2HighLine = {
+      value: 0,
+      id: 'Q2High',
+      color: 'red',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q2 high' },
+    };
+
+    this.q3HighLine = {
+      value: 0,
+      id: 'Q3High',
+      color: 'red',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q3 high' },
+    };
+
+    this.q4HighLine = {
+      value: 0,
+      id: 'Q4High',
+      color: 'red',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q4 high' },
+    };
+
+    this.q1LowLine = {
+      value: 0,
+      id: 'Q1Low',
+      color: 'green',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q1 low' },
+    };
+
+    this.q2LowLine = {
+      value: 0,
+      id: 'Q2Low',
+      color: 'green',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q2 low' },
+    };
+
+    this.q3LowLine = {
+      value: 0,
+      id: 'Q3Low',
+      color: 'green',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q3 low' },
+    };
+
+    this.q4LowLine = {
+      value: 0,
+      id: 'Q4Low',
+      color: 'green',
+      dashStyle: 'ShortDash',
+      width: 2,
+      label: { text: 'Q4 low' },
+    };
   }
 
   ngOnDestroy() {
@@ -143,9 +248,13 @@ export class StockChartComponent implements OnInit, OnDestroy {
     this.stockPrices = [];
     this.loading = true;
 
-    zip(this.stockChartService .getByName(this.stockName, this.searchDate),this.portfolioService.getByName(this.stockName))
+    zip(
+      this.stockChartService.getByName(this.stockName, this.searchDate),
+      this.portfolioService.getByName(this.stockName)
+    )
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([response1, response2]) => {
+      .subscribe(
+        ([response1, response2]) => {
           this.stockPrices = response1;
           this.portfolios = response2;
 
@@ -173,28 +282,33 @@ export class StockChartComponent implements OnInit, OnDestroy {
       TooltipComponent
     );
 
+    const obj = this;
+
     component.instance.stockPrices = this.stockPrices;
 
     return {
       chart: {
         type: 'candlestick',
-        panning: { enabled: true, type: "x" },
-        pinchType: "x",
+        panning: { enabled: true, type: 'x' },
+        pinchType: 'x',
         events: {},
         spacingRight: 0,
-        marginRight: 10
+        marginRight: 10,
       },
       time: { useUTC: false },
       title: { text: this.stockName },
       subtitle: { text: '' },
-      credits: { enabled: false},
+      credits: { enabled: false },
       navigator: { enabled: true },
       scrollbar: { enabled: true },
-      rangeSelector: { enabled: true, allButtonsEnabled: true, inputEnabled: true,
-                       inputBoxBorderColor: 'transparent',
-                       inputStyle: { fontWeight: 'bold'},
-                       selected: 1
-                      },
+      rangeSelector: {
+        enabled: true,
+        allButtonsEnabled: true,
+        inputEnabled: true,
+        inputBoxBorderColor: 'transparent',
+        inputStyle: { fontWeight: 'bold' },
+        selected: 1,
+      },
       tooltip: {
         split: true,
         borderColor: '#00537B',
@@ -203,7 +317,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
         shared: true,
         shadow: true,
         followPointer: true,
-        style: { fontSize: '10px', padding: '3px',},
+        style: { fontSize: '10px', padding: '3px' },
         outside: false,
         useHTML: false,
         formatter(): string {
@@ -219,17 +333,55 @@ export class StockChartComponent implements OnInit, OnDestroy {
         gui: {
           enabled: true,
           buttons: [
-            'typeChange', 'indicators', 'currentPriceIndicator','separator', 'fullScreen', 'zoomChange',
-            'separator', 'toggleAnnotations', 'simpleShapes', 'flags', 'lines', 'crookedLines', 'measure',
-            'advanced','verticalLabels'
+            'typeChange',
+            'indicators',
+            'currentPriceIndicator',
+            'separator',
+            'fullScreen',
+            'zoomChange',
+            'separator',
+            'toggleAnnotations',
+            'simpleShapes',
+            'flags',
+            'lines',
+            'crookedLines',
+            'measure',
+            'advanced',
+            'verticalLabels',
           ],
         },
       },
 
-      colors: [ '#016aff', '#fc5ab2', '#16d8ec', '#fc975a','#b62fff','#7f8899','#8085e9',
-                '#f7a35c', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec'
-              ],
+      colors: [
+        '#016aff',
+        '#fc5ab2',
+        '#16d8ec',
+        '#fc975a',
+        '#b62fff',
+        '#7f8899',
+        '#8085e9',
+        '#f7a35c',
+        '#f15c80',
+        '#e4d354',
+        '#2b908f',
+        '#f45b5b',
+        '#91e8e1',
+        '#7cb5ec',
+      ],
 
+      plotOptions: {
+        series: {
+          shadow: false,
+          marker: { enabled: false },
+        },
+        area: {
+          events: {
+            legendItemClick: function (e) {
+              obj.toggleBands(this.chart, this.name);
+            },
+          },
+        },
+      },
       xAxis: {
         type: 'datetime',
         minPadding: 0,
@@ -242,35 +394,22 @@ export class StockChartComponent implements OnInit, OnDestroy {
       },
       yAxis: [
         {
-          labels: { y:-2, align: 'left', reserveSpace:false , x: -20 },
+          labels: { y: -2, align: 'left', reserveSpace: false, x: -20 },
 
           showFirstLabel: true,
           title: { text: 'Price' },
           top: '0%',
           height: '65%',
-          resize: { enabled: true, controlledAxis: { next: ['highcharts-y80ahrf-43873']} },
-          crosshair: { width: 2},
+          resize: {
+            enabled: true,
+            controlledAxis: { next: ['highcharts-y80ahrf-43873'] },
+          },
+          crosshair: { width: 2 },
           events: {},
           showLastLabel: true,
           minorGridLineWidth: 1,
-          plotLines: [{
-            value: this.top,
-            color: 'red',
-            dashStyle: 'ShortDash',
-            width: 2,
-            label: {
-              text: 'Last quarter maximum'
-            }
-        },
-        {
-            value: this.bottom,
-            color: 'green',
-            dashStyle: 'ShortDash',
-            width: 2,
-            label: {
-                text: 'Last quarter minimum'
-            }
-        }]
+          plotLines: [ obj.q1HighLine, obj.q1LowLine,
+          ],
         },
         {
           id: 'highcharts-y80ahrf-43873',
@@ -280,61 +419,65 @@ export class StockChartComponent implements OnInit, OnDestroy {
           height: '35%',
           offset: 1,
           lineWidth: 2,
-          gridLineWidth:0,
-          resize: { enabled: true, controlledAxis: { next: [ 'highcharts-y80ahrf-43874'] } },
+          gridLineWidth: 0,
+          resize: {
+            enabled: true,
+            controlledAxis: { next: ['highcharts-y80ahrf-43874'] },
+          },
         },
         {
           id: 'highcharts-y80ahrf-43874',
           offset: 1,
-          lineWidth:1,
+          lineWidth: 1,
           opposite: true,
-          title: { text: ''},
+          title: { text: '' },
           tickPixelInterval: 40,
           showLastLabel: true,
           labels: { align: 'left', x: -3 },
-          angle:10,
+          angle: 10,
           top: '65%',
           height: '35%',
           resize: { enabled: false },
-          gridLineWidth:1,
+          gridLineWidth: 1,
           events: {},
-          plotLines: [{
-            value: 20,
-            color: 'green',
-            dashStyle: 'ShortDash',
-            width: 2,
-            label: {
-              text: 'over sold'
-            }
+          plotLines: [
+            {
+              value: 20,
+              color: 'green',
+              dashStyle: 'ShortDash',
+              width: 2,
+              label: {
+                text: 'over sold',
+              },
+            },
+            {
+              value: 80,
+              color: 'red',
+              dashStyle: 'ShortDash',
+              width: 2,
+              label: {
+                text: 'over bought',
+              },
+            },
+          ],
         },
-        {
-            value: 80,
-            color: 'red',
-            dashStyle: 'ShortDash',
-            width: 2,
-            label: {
-                text: 'over bought'
-            }
-        }]
-        }
-
       ],
       legend: { enabled: true },
       navigation: {
         bindings: {
           candlestick: {
-            className: 'highcharts-series-type-candlestick'
+            className: 'highcharts-series-type-candlestick',
           },
           ohlc: {
-            className: 'highcharts-series-type-ohlc'
+            className: 'highcharts-series-type-ohlc',
           },
           line: {
-            className: 'highcharts-series-type-line'
+            className: 'highcharts-series-type-line',
           },
           fullScreen: {
-            className: 'highcharts-full-screen'
-          }
-        }
+            className: 'highcharts-full-screen',
+          },
+        },
       },
 
       series: [
@@ -378,6 +521,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
           data: this.splitFlags,
           fillColor: 'gray',
           style: { color: 'white' },
+          showInLegend: false,
         },
         {
           type: 'flags',
@@ -388,6 +532,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
           data: this.bonusFlags,
           fillColor: 'purple',
           style: { color: 'white' },
+          showInLegend: false,
         },
         {
           type: 'flags',
@@ -398,6 +543,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
           data: this.positiveEarningFlags,
           fillColor: 'green',
           style: { color: 'white' },
+          showInLegend: false,
         },
         {
           type: 'flags',
@@ -408,6 +554,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
           data: this.negativeEarningFlags,
           fillColor: 'red',
           style: { color: 'white' },
+          showInLegend: false,
         },
         {
           type: 'flags',
@@ -434,42 +581,123 @@ export class StockChartComponent implements OnInit, OnDestroy {
         {
           linkedTo: 'Price',
           type: 'sma',
-          marker: {enabled:false},
+          marker: { enabled: false },
           id: 'highcharts-y80ahrf-41719',
           params: { index: 0, period: 44 },
           colorIndex: 1,
           lineWidth: 1,
-          data: []
+          data: [],
         },
 
         {
           linkedTo: 'Price',
           type: 'rsi',
           id: 'highcharts-y80ahrf-43871',
-          marker: {enabled:false},
+          marker: { enabled: false },
           params: { period: 14, decimals: 4 },
           lineWidth: 1,
           yAxis: 'highcharts-y80ahrf-43874',
           colorIndex: 2,
-          zones: [{
-            value: 20,
-            className: 'zone-0',
-            fillColor:'green'
-        }, {
-            value: 80,
-            className: 'zone-1',
-            fillColor:'red'
-        }],
-          data: []
-        }
-
+          zones: [
+            {
+              value: 20,
+              className: 'zone-0',
+              fillColor: 'green',
+            },
+            {
+              value: 80,
+              className: 'zone-1',
+              fillColor: 'red',
+            },
+          ],
+          data: [],
+        },
+        { type: 'area', name: 'Q1High', color: 'red' },
+        { type: 'area', name: 'Q1Low' , color: 'green'},
+        { type: 'area', name: 'Q2High' , color: 'red'},
+        { type: 'area', name: 'Q2Low' , color: 'green'},
+        { type: 'area', name: 'Q3High' , color: 'red'},
+        { type: 'area', name: 'Q3Low' , color: 'green'},
+        { type: 'area', name: 'Q4High' , color: 'red'},
+        { type: 'area', name: 'Q4Low' , color: 'green'},
       ],
     };
   }
 
+  toggleBands(chart: Highcharts.Chart, name: string) {
+    switch (name) {
+      case 'Q1High':
+        if (this.isQ1HighVisible) {
+          chart.yAxis[0].removePlotLine('Q1High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q1HighLine);
+        }
+        this.isQ1HighVisible = !this.isQ1HighVisible;
+        break;
+      case 'Q2High':
+        if (this.isQ2HighVisible) {
+          chart.yAxis[0].removePlotLine('Q2High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q2HighLine);
+        }
+        this.isQ2HighVisible = !this.isQ2HighVisible;
+        break;
+      case 'Q3High':
+        if (this.isQ3HighVisible) {
+          chart.yAxis[0].removePlotLine('Q3High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q3HighLine);
+        }
+        this.isQ3HighVisible = !this.isQ3HighVisible;
+        break;
+      case 'Q4High':
+        if (this.isQ4HighVisible) {
+          chart.yAxis[0].removePlotLine('Q4High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q4HighLine);
+        }
+        this.isQ4HighVisible = !this.isQ4HighVisible;
+        break;
+      case 'Q1Low':
+        if (this.isQ1LowVisible) {
+          chart.yAxis[0].removePlotLine('Q1Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q1LowLine);
+        }
+        this.isQ1LowVisible = !this.isQ1LowVisible;
+        break;
+      case 'Q2Low':
+        if (this.isQ2LowVisible) {
+          chart.yAxis[0].removePlotLine('Q2Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q2LowLine);
+        }
+        this.isQ2LowVisible = !this.isQ2LowVisible;
+
+        break;
+      case 'Q3Low':
+        if (this.isQ3LowVisible) {
+          chart.yAxis[0].removePlotLine('Q3Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q3LowLine);
+        }
+        this.isQ3LowVisible = !this.isQ3LowVisible;
+        break;
+      case 'Q4Low':
+        if (this.isQ4LowVisible) {
+          chart.yAxis[0].removePlotLine('Q4Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q4HighLine);
+        }
+        this.isQ4LowVisible = !this.isQ4LowVisible;
+        break;
+      default:
+        break;
+    }
+  }
+
   private showHighChart() {
     if (this.isChart) {
-
       this.ohlc = [];
       this.volume = [];
       this.flags = [];
@@ -477,12 +705,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
       this.splitFlags = [];
       this.positiveEarningFlags = [];
       this.negativeEarningFlags = [];
-      const highs:number[] = [];
-      const lows:number[] = [];
 
       this.stockPrices.forEach((row) => {
-        highs.push(row.high);
-        lows.push(row.low);
 
         this.ohlc.push([
           new Date(row.date).getTime(),
@@ -551,7 +775,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
 
       this.chartOptions = this.setChartOptions();
 
-
       this.chartOptions.series[0].data = this.ohlc;
       this.chartOptions.series[1].data = this.volume;
       this.chartOptions.series[2].data = this.flags;
@@ -560,22 +783,27 @@ export class StockChartComponent implements OnInit, OnDestroy {
       this.chartOptions.series[5].data = this.positiveEarningFlags;
       this.chartOptions.series[6].data = this.negativeEarningFlags;
 
-      this.setQuarterHighLow(highs, lows);
+      this.setQuarterHighLow();
       this.setBuySellSignal();
 
       this.updateChart = true;
     }
   }
 
-  private setQuarterHighLow(highs: number[], lows: number[]) {
+  private setQuarterHighLow() {
 
-    const last90Highs = highs.slice(Math.max(highs.length - 90, 0));
-    const last90Lows = lows.slice(Math.max(lows.length - 90, 0));
-    this.top = Math.max(...last90Highs, 0);
-    this.bottom = Math.min(...last90Lows);
+    var highLowData = this.stockPrices[this.stockPrices.length - 2];
 
-    this.chartOptions.yAxis[0].plotLines[0].value = this.top;
-    this.chartOptions.yAxis[0].plotLines[1].value = this.bottom;
+    this.q1HighLine.value = highLowData.q1High;
+    this.q2HighLine.value = highLowData.q2High;
+    this.q3HighLine.value = highLowData.q3High;
+    this.q4HighLine.value = highLowData.q4High;
+
+    this.q1LowLine.value = highLowData.q1Low;
+    this.q2LowLine.value = highLowData.q2Low;
+    this.q3LowLine.value = highLowData.q3Low;
+    this.q4LowLine.value = highLowData.q4Low;
+
   }
 
   private setBuySellSignal() {
@@ -583,7 +811,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
     this.sellFlags = [];
 
     this.portfolios.forEach((row) => {
-
       this.buyFlags.push({
         x: new Date(row.buyDate).getTime(),
         title: 'Buy',
@@ -666,9 +893,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
   }
 
   search(event: any) {
-    this.symbolService.getSymbols(event.query).subscribe(data => {
+    this.symbolService.getSymbols(event.query).subscribe((data) => {
       this.results = data;
     });
   }
-
 }

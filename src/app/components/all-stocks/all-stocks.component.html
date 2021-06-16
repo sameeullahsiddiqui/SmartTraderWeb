@@ -47,7 +47,7 @@
         <th pSortableColumn="percentage">%<p-sortIcon field="percentage"></p-sortIcon></th>
         <th pSortableColumn="weekly">Weekly<p-sortIcon field="weekly"></p-sortIcon></th>
         <th pSortableColumn="monthly">Monthly<p-sortIcon field="monthly"></p-sortIcon></th>
-        <th>Price</th>
+        <th pSortableColumn="last">Price<p-sortIcon field="last"></p-sortIcon></th>
         <th pSortableColumn="deliveryQty">Delivery Qty<p-sortIcon field="deliveryQty"></p-sortIcon></th>
         <th pSortableColumn="reason">Reason<p-sortIcon field="reason"></p-sortIcon></th>
       </tr>
@@ -88,6 +88,7 @@
         <td class="right-aligned">
           {{ delivery.last }}
         </td>
+
         <td class="right-aligned">
           {{ delivery.deliveryQty }}
         </td>
