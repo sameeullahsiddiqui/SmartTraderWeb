@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { ConfirmationService } from 'primeng/api';
@@ -88,12 +89,15 @@ export class PortfolioComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private portfolioService: PortfolioService,
     private symbolService: SymbolService,
+    private titleService: Title,
     public router: Router
   ) {
     this.statusOptions = [
       { label: 'Open', value: 'Open' },
       { label: 'Closed', value: 'Closed' },
     ];
+
+    this.titleService.setTitle('Portfolio');
 
     this.setFormData();
   }
