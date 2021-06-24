@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { EarningReport } from '../models/earning-report';
@@ -11,7 +11,7 @@ import { EarningReport } from '../models/earning-report';
 })
 export class EarningReportService {
 
-  private REST_API_SERVER = environment.API_SERVER + "/EarningReport/";
+  private REST_API_SERVER = environment.API_SERVER + "/EarningReport";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -23,12 +23,15 @@ export class EarningReportService {
   }
 
   public getDataByDate(date: string, EarningReportOnly:boolean){
-    const url =  `${this.REST_API_SERVER}${date}/${EarningReportOnly}`;
+    const url =  `${this.REST_API_SERVER}/${date}`;
     return this.httpClient.get<EarningReport[]>(url).pipe(
       catchError(this.handleError)
       );
   }
 
+  update(id: number, data: EarningReport): Observable<any> {
+    return this.httpClient.put(`${this.REST_API_SERVER}/${id}`, data);
+  }
   handleError(error: HttpErrorResponse){
     return throwError(error);
     }

@@ -34,7 +34,7 @@
     <div class="row">
     <div class="col-md-12">
       <label for="searchDate">Date: </label>
-      <p-calendar [disabledDays]="[0, 6]" [(ngModel)]="searchDate" [showIcon]="true" inputId="icon"></p-calendar>
+      <p-calendar [(ngModel)]="searchDate" [showIcon]="true" inputId="icon"></p-calendar>
       <button pButton pRipple label="Search" icon="pi pi-search" class="p-button-warning p-mr-2" (click)="searchRecords()"></button>
     </div>
   </div>
@@ -104,7 +104,14 @@
       <tr>
         <td> {{ earningReport.date | date: "yyyy-MM-dd" }}</td>
         <td> {{ earningReport.year }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStock(earningReport.company)">{{ earningReport.company }}</td>
+        <td style="cursor: pointer; text-decoration: underline;">
+        <span (click)= "showStock(earningReport.company)">{{ earningReport.company }}</span>
+        <button pButton pRipple type="button"
+        icon="pi pi-chart-bar"
+        class="p-button-rounded p-button-secondary p-button-text"
+        (click)="openChart(earningReport.company)">
+        </button>
+      </td>
         <td> {{ earningReport.currentQuarter }}</td>
 
         <td *ngIf="isQoQVisible('Q1')" [ngClass]="{ positive: earningReport.qoQSales_Q1 > 0, negative: earningReport.qoQSales_Q1 < 0 }"> {{ earningReport.qoQSales_Q1}} </td>
@@ -136,7 +143,66 @@
         <td *ngIf="isYoYVisible('Q2')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q2 > 0, negative: earningReport.yoYNetProfit_Q2 < 0 }">  {{ earningReport.yoYNetProfit_Q2}} </td>
         <td *ngIf="isYoYVisible('Q3')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q3 > 0, negative: earningReport.yoYNetProfit_Q3 < 0 }">  {{ earningReport.yoYNetProfit_Q3}} </td>
         <td *ngIf="isYoYVisible('Q4')" [ngClass]="{ positive: earningReport.yoYNetProfit_Q4 > 0, negative: earningReport.yoYNetProfit_Q4 < 0 }">  {{ earningReport.yoYNetProfit_Q4}} </td>
+        <td class="p-inputgroup">
+          <div class="p-grid">
+          <button
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-2 p-col-4"
+            (click)="editEarningReport(earningReport)"
+          ></button>
+        </div>
+        </td>
+
       </tr>
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog
+  [(visible)]="earningReportDialog"
+  [style]="{ width: '550px' }"
+  header="Earnings Details"
+  [modal]="true"
+  styleClass="p-fluid"
+  [contentStyle]="{'overflow': 'visible'}"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="this.formInput">
+      <div class="card">
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-6">
+          <label for="date">Company:</label><br/>
+          <input type="text" formControlName="company" required />
+        </div>
+        <div class="p-field p-col-12 p-md-6">
+          <label for="date">Earning Date</label>
+          <p-calendar id="date" formControlName="date" [showIcon]="true" inputId="icon" ></p-calendar>
+        </div>
+     </div>
+  </div>
+ </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="saveEarningReport()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '650px' }"></p-confirmDialog>

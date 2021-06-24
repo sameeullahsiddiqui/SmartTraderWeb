@@ -68,7 +68,9 @@ export class AllStocksComponent implements OnInit, OnDestroy {
         .subscribe((data: any[]) => {
           this.deliveries = data;
           this.loading = false;
-          localStorage.setItem(key, JSON.stringify(this.deliveries));
+          if(data.length >0) {
+            localStorage.setItem(key, JSON.stringify(this.deliveries));
+          }
         },
         (error) => {
           this.loading = false;
@@ -102,4 +104,7 @@ export class AllStocksComponent implements OnInit, OnDestroy {
     window.open(url, '_blank');
   }
 
+  openChart(delivery:Delivery) {
+    window.open("https://in.tradingview.com/chart/?symbol=NSE:" + delivery.symbolName, '_blank');
+  }
 }

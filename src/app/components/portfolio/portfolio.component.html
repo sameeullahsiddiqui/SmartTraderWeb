@@ -39,7 +39,7 @@
           [(selection)]="selectedPortfolios" [rowHover]="true" dataKey="id"
            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
           [showCurrentPageReport]="true"
-          [globalFilterFields]="['symbolName']"
+          [globalFilterFields]="['symbolName','buyComment']"
           >
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
@@ -63,7 +63,7 @@
         <th pSortableColumn="targetPrice">TP/SL<p-sortIcon field="targetPrice"></p-sortIcon></th>
         <!-- <th pSortableColumn="breakEvenPrice">BE<p-sortIcon field="breakEvenPrice"></p-sortIcon></th> -->
         <th pSortableColumn="buyDayReturn">B. Day Return <p-sortIcon field="buyDayReturn"></p-sortIcon></th>
-        <th pSortableColumn="buyComment">B. Comment <p-sortIcon field="buyComment"></p-sortIcon></th>
+        <!-- <th pSortableColumn="buyComment">B. Comment <p-sortIcon field="buyComment"></p-sortIcon></th> -->
         <!-- <th pSortableColumn="buyGrade">B. Grade <p-sortIcon field="buyGrade"></p-sortIcon></th> -->
         <th pSortableColumn="buyExecutionTime">B. Time <p-sortIcon field="buyExecutionTime"></p-sortIcon></th>
         <th pSortableColumn="sellExecutionTime">S. Time <p-sortIcon field="sellExecutionTime"></p-sortIcon></th>
@@ -74,14 +74,14 @@
         <!-- <th pSortableColumn="tradeGrade">Trade Grade <p-sortIcon field="tradeGrade"></p-sortIcon></th> -->
         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
         <th pSortableColumn="currentProfit">Current Profit <p-sortIcon field="currentProfit"></p-sortIcon></th>
+        <th>Price</th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-portfolio>
       <tr>
-        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;"
-        (click)= "showStock(portfolio.symbolName, portfolio.buyDate)">
-           {{ portfolio.symbolName }}
+        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;">
+           <span (click)= "showStock(portfolio.symbolName, portfolio.buyDate)">{{ portfolio.symbolName }} </span>
             <button pButton pRipple type="button"
             icon="pi pi-chart-bar"
             class="p-button-rounded p-button-secondary p-button-text"
@@ -110,7 +110,7 @@
         <td>{{ portfolio.targetPrice | currency: "INR" }} / {{ portfolio.stopLossPrice | currency: "INR" }}</td>
         <!-- <td>{{ portfolio.breakEvenPrice | currency: "INR" }}</td> -->
         <td>{{ portfolio.buyDayReturn | currency: "INR" }}</td>
-        <td>{{ portfolio.buyComment }}</td>
+        <!-- <td>{{ portfolio.buyComment }}</td> -->
         <!-- <td>{{ portfolio.buyGrade }}</td> -->
         <td>{{ portfolio.buyExecutionTime | date: 'hh:mm'  }}</td>
         <td>{{ portfolio.sellExecutionTime | date: 'hh:mm'  }}
@@ -125,8 +125,8 @@
           positive: portfolio.currentProfit > 0,
           negative: portfolio.currentProfit < 0
           }"
->{{ portfolio.currentProfit | currency: "INR" }}</td>
-
+        >{{ portfolio.currentProfit | currency: "INR" }}</td>
+         <td> {{ portfolio.currentPrice  | currency: "INR" }}</td>
         <td class="p-inputgroup">
           <div class="p-grid">
           <button
@@ -161,6 +161,7 @@
   header="Portfolio Details"
   [modal]="true"
   styleClass="p-fluid"
+  [contentStyle]="{'overflow': 'visible'}"
 >
   <ng-template pTemplate="content">
     <form [formGroup]="this.formInput">

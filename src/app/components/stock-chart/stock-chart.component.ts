@@ -114,11 +114,11 @@ export class StockChartComponent implements OnInit, OnDestroy {
   q2LowLine: YAxisPlotLinesOptions = {};
   q3LowLine: YAxisPlotLinesOptions = {};
   q4LowLine: YAxisPlotLinesOptions = {};
-  isQ1HighVisible = true;
+  isQ1HighVisible = false;
   isQ2HighVisible = false;
   isQ3HighVisible = false;
   isQ4HighVisible = false;
-  isQ1LowVisible = true;
+  isQ1LowVisible = false;
   isQ2LowVisible = false;
   isQ3LowVisible = false;
   isQ4LowVisible = false;
@@ -160,8 +160,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
     this.chartColors = ['#016aff','#fc5ab2','#16d8ec','#fc975a','#b62fff','#7f8899','#8085e9','#f7a35c',
                         '#f15c80','#e4d354','#2b908f','#f45b5b','#91e8e1','#7cb5ec',];
 
-    this.setYAxis();
     this.setHighLowLines();
+    this.setYAxis();
   }
 
 
@@ -250,102 +250,231 @@ export class StockChartComponent implements OnInit, OnDestroy {
         this.setSellFlag(),
         this.setSMAFlag(),
         this.setRSIFlag(),
-        { type: 'area', name: 'Q1High', color: 'red' },
-        { type: 'area', name: 'Q1Low', color: 'green' },
-        { type: 'area', name: 'Q2High', color: 'red' },
-        { type: 'area', name: 'Q2Low', color: 'green' },
-        { type: 'area', name: 'Q3High', color: 'red' },
-        { type: 'area', name: 'Q3Low', color: 'green' },
-        { type: 'area', name: 'Q4High', color: 'red' },
-        { type: 'area', name: 'Q4Low', color: 'green' },
+        { type: 'area', name: 'Q1High', color: 'red', visible:false },
+        { type: 'area', name: 'Q1Low', color: 'green', visible:false },
+        { type: 'area', name: 'Q2High', color: 'red', visible:false },
+        { type: 'area', name: 'Q2Low', color: 'green', visible:false },
+        { type: 'area', name: 'Q3High', color: 'red', visible:false },
+        { type: 'area', name: 'Q3Low', color: 'green', visible:false },
+        { type: 'area', name: 'Q4High', color: 'red', visible:false },
+        { type: 'area', name: 'Q4Low', color: 'green', visible:false },
       ],
     };
   }
 
 
-  //#region START Chart Settings
-  private setYAxis() {
-    this.yAxis_Price = {
-      labels: { y: -2, align: 'left', reserveSpace: false, x: -20 },
-      showFirstLabel: true,
-      title: { text: 'Price' },
-      top: '0%',
-      height: '65%',
-      resize: {
-        enabled: true,
-        controlledAxis: { next: ['highcharts-y80ahrf-43873'] },
-      },
-      crosshair: { width: 2 },
-      events: {},
-      showLastLabel: true,
-      minorGridLineWidth: 1,
-      plotLines: [this.q1HighLine, this.q1LowLine],
-    };
+  private toggleBands(chart: Highcharts.Chart, name: string) {
+    switch (name) {
+      case 'Q1High':
+        if (this.isQ1HighVisible) {
+          chart.yAxis[0].removePlotLine('Q1High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q1HighLine);
+        }
+        this.isQ1HighVisible = !this.isQ1HighVisible;
+        break;
+      case 'Q2High':
+        if (this.isQ2HighVisible) {
+          chart.yAxis[0].removePlotLine('Q2High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q2HighLine);
+        }
+        this.isQ2HighVisible = !this.isQ2HighVisible;
+        break;
+      case 'Q3High':
+        if (this.isQ3HighVisible) {
+          chart.yAxis[0].removePlotLine('Q3High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q3HighLine);
+        }
+        this.isQ3HighVisible = !this.isQ3HighVisible;
+        break;
+      case 'Q4High':
+        if (this.isQ4HighVisible) {
+          chart.yAxis[0].removePlotLine('Q4High');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q4HighLine);
+        }
+        this.isQ4HighVisible = !this.isQ4HighVisible;
+        break;
+      case 'Q1Low':
+        if (this.isQ1LowVisible) {
+          chart.yAxis[0].removePlotLine('Q1Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q1LowLine);
+        }
+        this.isQ1LowVisible = !this.isQ1LowVisible;
+        break;
+      case 'Q2Low':
+        if (this.isQ2LowVisible) {
+          chart.yAxis[0].removePlotLine('Q2Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q2LowLine);
+        }
+        this.isQ2LowVisible = !this.isQ2LowVisible;
 
-    this.yAxis_Volume = {
-      id: 'highcharts-y80ahrf-43873',
-      labels: { align: 'right', x: -3 },
-      title: { text: 'Volume' },
-      top: '65%',
-      height: '35%',
-      offset: 1,
-      lineWidth: 2,
-      gridLineWidth: 0,
-      resize: {
-        enabled: true,
-        controlledAxis: { next: ['highcharts-y80ahrf-43874'] },
-      },
-    };
-
-    this.yAxis_OverBoughtSold =  {
-      id: 'highcharts-y80ahrf-43874',
-      offset: 1,
-      lineWidth: 1,
-      opposite: true,
-      title: { text: '' },
-      tickPixelInterval: 40,
-      showLastLabel: true,
-      labels: { align: 'left', x: -3 },
-      angle: 10,
-      top: '65%',
-      height: '35%',
-      resize: { enabled: false },
-      gridLineWidth: 1,
-      events: {},
-      plotLines: [
-        {
-          value: 20,
-          color: 'green',
-          dashStyle: 'ShortDash',
-          width: 2,
-          label: {
-            text: 'over sold',
-          },
-        },
-        {
-          value: 80,
-          color: 'red',
-          dashStyle: 'ShortDash',
-          width: 2,
-          label: {
-            text: 'over bought',
-          },
-        },
-      ],
-    };
+        break;
+      case 'Q3Low':
+        if (this.isQ3LowVisible) {
+          chart.yAxis[0].removePlotLine('Q3Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q3LowLine);
+        }
+        this.isQ3LowVisible = !this.isQ3LowVisible;
+        break;
+      case 'Q4Low':
+        if (this.isQ4LowVisible) {
+          chart.yAxis[0].removePlotLine('Q4Low');
+        } else {
+          chart.yAxis[0].addPlotLine(this.q4LowLine);
+        }
+        this.isQ4LowVisible = !this.isQ4LowVisible;
+        break;
+      default:
+        break;
+    }
   }
 
-  private setRangeSelector() : RangeSelectorOptions{
-    return {
-      enabled: true,
-      allButtonsEnabled: true,
-      inputEnabled: true,
-      inputBoxBorderColor: 'transparent',
-      inputStyle: { fontWeight: 'bold' },
-      selected: 1,
-    };
+  private showHighChart() {
+    if (this.isChart) {
+      this.ohlc = [];
+      this.volume = [];
+      this.flags = [];
+      this.bonusFlags = [];
+      this.splitFlags = [];
+      this.positiveEarningFlags = [];
+      this.negativeEarningFlags = [];
+
+      this.stockPrices.forEach((row) => {
+
+        this.ohlc.push([
+          new Date(row.date).getTime(),
+          row.open,
+          row.high,
+          row.low,
+          row.close, // close
+        ]);
+
+        this.volume.push([
+          new Date(row.date).getTime(),
+          row.deliveryQty, // the volume
+        ]);
+
+        if (
+          row.reason !== '' &&
+          row.reason !== null &&
+          row.reason !== 'B' &&
+          row.reason !== 'S' &&
+          !row.reason.includes('E(Q')
+        ) {
+          this.flags.push({
+            x: new Date(row.date).getTime(),
+            title: row.reason,
+          });
+        }
+
+        if (row.reason !== '' && row.reason !== null && row.reason === 'B') {
+          this.bonusFlags.push({
+            x: new Date(row.date).getTime(),
+            title: row.tooltip,
+            text: row.tooltip,
+          });
+        }
+        if (row.reason !== '' && row.reason !== null && row.reason === 'S') {
+          this.splitFlags.push({
+            x: new Date(row.date).getTime(),
+            title: row.tooltip,
+            text: row.tooltip,
+          });
+        }
+        if (
+          row.reason !== '' &&
+          row.reason !== null &&
+          row.reason.includes('Q+')
+        ) {
+          this.positiveEarningFlags.push({
+            x: new Date(row.date).getTime(),
+            title: row.reason,
+            text: row.tooltip,
+          });
+        }
+
+        if (
+          row.reason !== '' &&
+          row.reason !== null &&
+          row.reason.includes('Q-')
+        ) {
+          this.negativeEarningFlags.push({
+            x: new Date(row.date).getTime(),
+            title: row.reason,
+            text: row.tooltip,
+          });
+        }
+      });
+
+      this.chartOptions = this.setChartOptions();
+
+      this.chartOptions.series[0].data = this.ohlc;
+      this.chartOptions.series[1].data = this.volume;
+      this.chartOptions.series[2].data = this.flags;
+      this.chartOptions.series[3].data = this.splitFlags;
+      this.chartOptions.series[4].data = this.bonusFlags;
+      this.chartOptions.series[5].data = this.positiveEarningFlags;
+      this.chartOptions.series[6].data = this.negativeEarningFlags;
+
+      this.setQuarterHighLow();
+      this.setBuySellSignal();
+
+      this.updateChart = true;
+    }
+  }
+
+  private setQuarterHighLow() {
+    //var highLowData = this.stockPrices[this.stockPrices.length - 2];
+    const highLowData = this.stockPrices.filter(x => x.date.toString() === this.searchDate+"T00:00:00")[0];
+
+    if(highLowData) {
+    this.q1HighLine.value = highLowData.q1High;
+    this.q2HighLine.value = highLowData.q2High;
+    this.q3HighLine.value = highLowData.q3High;
+    this.q4HighLine.value = highLowData.q4High;
+
+    this.q1LowLine.value = highLowData.q1Low;
+    this.q2LowLine.value = highLowData.q2Low;
+    this.q3LowLine.value = highLowData.q3Low;
+    this.q4LowLine.value = highLowData.q4Low;
+
+    //this.chartOptions.yAxis[0].plotLines[0].value = highLowData.q1High;
+    //this.chartOptions.yAxis[0].plotLines[1].value = highLowData.q1Low;
+    }
 
   }
+
+  private setBuySellSignal() {
+    this.buyFlags = [];
+    this.sellFlags = [];
+
+    this.portfolios.forEach((row) => {
+      this.buyFlags.push({
+        x: new Date(row.buyDate).getTime(),
+        title: 'Buy',
+        text: row.buyPrice,
+      });
+
+      if (row.sellDate) {
+        this.sellFlags.push({
+          x: new Date(row.sellDate).getTime(),
+          title: 'Sell',
+          text: row.sellPrice,
+        });
+      }
+    });
+
+    this.chartOptions.series[7].data = this.buyFlags;
+    this.chartOptions.series[8].data = this.sellFlags;
+  }
+
+//#region START Chart Settings
 
   private setHighLowLines() {
     this.isQ1HighVisible = true;
@@ -429,6 +558,89 @@ export class StockChartComponent implements OnInit, OnDestroy {
       width: 2,
       label: { text: 'Q4 low' },
     };
+  }
+
+  private setYAxis() {
+    this.yAxis_Price = {
+      labels: { y: -2, align: 'left', reserveSpace: false, x: -20 },
+      showFirstLabel: true,
+      title: { text: 'Price' },
+      top: '0%',
+      height: '65%',
+      resize: {
+        enabled: true,
+        controlledAxis: { next: ['highcharts-y80ahrf-43873'] },
+      },
+      crosshair: { width: 2 },
+      events: {},
+      showLastLabel: true,
+      minorGridLineWidth: 1,
+      //plotLines: [this.q1HighLine, this.q1LowLine],
+    };
+
+    this.yAxis_Volume = {
+      id: 'highcharts-y80ahrf-43873',
+      labels: { align: 'right', x: -3 },
+      title: { text: 'Volume' },
+      top: '65%',
+      height: '35%',
+      offset: 1,
+      lineWidth: 2,
+      gridLineWidth: 0,
+      resize: {
+        enabled: true,
+        controlledAxis: { next: ['highcharts-y80ahrf-43874'] },
+      },
+    };
+
+    this.yAxis_OverBoughtSold =  {
+      id: 'highcharts-y80ahrf-43874',
+      offset: 1,
+      lineWidth: 1,
+      opposite: true,
+      title: { text: '' },
+      tickPixelInterval: 40,
+      showLastLabel: true,
+      labels: { align: 'left', x: -3 },
+      angle: 10,
+      top: '65%',
+      height: '35%',
+      resize: { enabled: false },
+      gridLineWidth: 1,
+      events: {},
+      plotLines: [
+        {
+          value: 20,
+          color: 'green',
+          dashStyle: 'ShortDash',
+          width: 2,
+          label: {
+            text: 'over sold',
+          },
+        },
+        {
+          value: 80,
+          color: 'red',
+          dashStyle: 'ShortDash',
+          width: 2,
+          label: {
+            text: 'over bought',
+          },
+        },
+      ],
+    };
+  }
+
+  private setRangeSelector() : RangeSelectorOptions{
+    return {
+      enabled: true,
+      allButtonsEnabled: true,
+      inputEnabled: true,
+      inputBoxBorderColor: 'transparent',
+      inputStyle: { fontWeight: 'bold' },
+      selected: 1,
+    };
+
   }
 
   private setStockTools(): Highcharts.StockToolsOptions{
@@ -663,212 +875,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
         },
       },
     };
-  }
-
-  private toggleBands(chart: Highcharts.Chart, name: string) {
-    switch (name) {
-      case 'Q1High':
-        if (this.isQ1HighVisible) {
-          chart.yAxis[0].removePlotLine('Q1High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q1HighLine);
-        }
-        this.isQ1HighVisible = !this.isQ1HighVisible;
-        break;
-      case 'Q2High':
-        if (this.isQ2HighVisible) {
-          chart.yAxis[0].removePlotLine('Q2High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q2HighLine);
-        }
-        this.isQ2HighVisible = !this.isQ2HighVisible;
-        break;
-      case 'Q3High':
-        if (this.isQ3HighVisible) {
-          chart.yAxis[0].removePlotLine('Q3High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q3HighLine);
-        }
-        this.isQ3HighVisible = !this.isQ3HighVisible;
-        break;
-      case 'Q4High':
-        if (this.isQ4HighVisible) {
-          chart.yAxis[0].removePlotLine('Q4High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q4HighLine);
-        }
-        this.isQ4HighVisible = !this.isQ4HighVisible;
-        break;
-      case 'Q1Low':
-        if (this.isQ1LowVisible) {
-          chart.yAxis[0].removePlotLine('Q1Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q1LowLine);
-        }
-        this.isQ1LowVisible = !this.isQ1LowVisible;
-        break;
-      case 'Q2Low':
-        if (this.isQ2LowVisible) {
-          chart.yAxis[0].removePlotLine('Q2Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q2LowLine);
-        }
-        this.isQ2LowVisible = !this.isQ2LowVisible;
-
-        break;
-      case 'Q3Low':
-        if (this.isQ3LowVisible) {
-          chart.yAxis[0].removePlotLine('Q3Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q3LowLine);
-        }
-        this.isQ3LowVisible = !this.isQ3LowVisible;
-        break;
-      case 'Q4Low':
-        if (this.isQ4LowVisible) {
-          chart.yAxis[0].removePlotLine('Q4Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q4HighLine);
-        }
-        this.isQ4LowVisible = !this.isQ4LowVisible;
-        break;
-      default:
-        break;
-    }
-  }
-
-  private showHighChart() {
-    if (this.isChart) {
-      this.ohlc = [];
-      this.volume = [];
-      this.flags = [];
-      this.bonusFlags = [];
-      this.splitFlags = [];
-      this.positiveEarningFlags = [];
-      this.negativeEarningFlags = [];
-
-      this.stockPrices.forEach((row) => {
-
-        this.ohlc.push([
-          new Date(row.date).getTime(),
-          row.open,
-          row.high,
-          row.low,
-          row.close, // close
-        ]);
-
-        this.volume.push([
-          new Date(row.date).getTime(),
-          row.deliveryQty, // the volume
-        ]);
-
-        if (
-          row.reason !== '' &&
-          row.reason !== null &&
-          row.reason !== 'B' &&
-          row.reason !== 'S' &&
-          !row.reason.includes('E(Q')
-        ) {
-          this.flags.push({
-            x: new Date(row.date).getTime(),
-            title: row.reason,
-          });
-        }
-
-        if (row.reason !== '' && row.reason !== null && row.reason === 'B') {
-          this.bonusFlags.push({
-            x: new Date(row.date).getTime(),
-            title: row.tooltip,
-            text: row.tooltip,
-          });
-        }
-        if (row.reason !== '' && row.reason !== null && row.reason === 'S') {
-          this.splitFlags.push({
-            x: new Date(row.date).getTime(),
-            title: row.tooltip,
-            text: row.tooltip,
-          });
-        }
-        if (
-          row.reason !== '' &&
-          row.reason !== null &&
-          row.reason.includes('Q+')
-        ) {
-          this.positiveEarningFlags.push({
-            x: new Date(row.date).getTime(),
-            title: row.reason,
-            text: row.tooltip,
-          });
-        }
-
-        if (
-          row.reason !== '' &&
-          row.reason !== null &&
-          row.reason.includes('Q-')
-        ) {
-          this.negativeEarningFlags.push({
-            x: new Date(row.date).getTime(),
-            title: row.reason,
-            text: row.tooltip,
-          });
-        }
-      });
-
-      this.chartOptions = this.setChartOptions();
-
-      this.chartOptions.series[0].data = this.ohlc;
-      this.chartOptions.series[1].data = this.volume;
-      this.chartOptions.series[2].data = this.flags;
-      this.chartOptions.series[3].data = this.splitFlags;
-      this.chartOptions.series[4].data = this.bonusFlags;
-      this.chartOptions.series[5].data = this.positiveEarningFlags;
-      this.chartOptions.series[6].data = this.negativeEarningFlags;
-
-      this.setQuarterHighLow();
-      this.setBuySellSignal();
-
-      this.updateChart = true;
-    }
-  }
-
-  private setQuarterHighLow() {
-
-    var highLowData = this.stockPrices[this.stockPrices.length - 2];
-
-    this.q1HighLine.value = highLowData.q1High;
-    this.q2HighLine.value = highLowData.q2High;
-    this.q3HighLine.value = highLowData.q3High;
-    this.q4HighLine.value = highLowData.q4High;
-
-    this.q1LowLine.value = highLowData.q1Low;
-    this.q2LowLine.value = highLowData.q2Low;
-    this.q3LowLine.value = highLowData.q3Low;
-    this.q4LowLine.value = highLowData.q4Low;
-
-  }
-
-  private setBuySellSignal() {
-    this.buyFlags = [];
-    this.sellFlags = [];
-
-    this.portfolios.forEach((row) => {
-      this.buyFlags.push({
-        x: new Date(row.buyDate).getTime(),
-        title: 'Buy',
-        text: row.buyPrice,
-      });
-
-      if (row.sellDate) {
-        this.sellFlags.push({
-          x: new Date(row.sellDate).getTime(),
-          title: 'Sell',
-          text: row.sellPrice,
-        });
-      }
-    });
-
-    this.chartOptions.series[7].data = this.buyFlags;
-    this.chartOptions.series[8].data = this.sellFlags;
   }
 
   //#endregion END Chart Settings

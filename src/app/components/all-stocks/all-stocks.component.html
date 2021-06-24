@@ -55,7 +55,14 @@
     <ng-template pTemplate="body" let-delivery let-rowIndex="rowIndex">
       <tr>
         <td>{{ delivery.date | date: "yyyy-MM-dd" }}</td>
-        <td style="cursor: pointer; text-decoration: underline;" (click)= "showStock(delivery.symbolName)">{{ delivery.symbolName }}</td>
+        <td style="cursor: pointer; text-decoration: underline;" >
+        <span (click)= "showStock(delivery.symbolName)">{{ delivery.symbolName }}</span>
+        <button pButton pRipple type="button"
+        icon="pi pi-chart-bar"
+        class="p-button-rounded p-button-secondary p-button-text"
+        (click)="openChart(delivery)">
+      </button>
+    </td>
         <td style="cursor: pointer; text-decoration: underline;" (click)= "showAllStocks(delivery.sector, delivery.date,1)">{{ delivery.sector }}</td>
         <td>{{ delivery.delRatio }}</td>
         <td>{{ delivery.volRatio }}</td>

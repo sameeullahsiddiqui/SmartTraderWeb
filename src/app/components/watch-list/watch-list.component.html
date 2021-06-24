@@ -88,9 +88,8 @@
           <p-tableCheckbox [value]="watchList"></p-tableCheckbox>
         </td>
         <td>{{ watchList.date | date }}</td>
-        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;"
-        (click)= "showStock(watchList.symbol)">
-           {{ watchList.symbol }}
+        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;">
+           <span (click)= "showStock(watchList.symbol)">{{ watchList.symbol }}</span>
             <button pButton pRipple type="button"
             icon="pi pi-chart-bar"
             class="p-button-rounded p-button-secondary p-button-text"

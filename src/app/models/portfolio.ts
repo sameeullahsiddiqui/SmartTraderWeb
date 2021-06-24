@@ -36,6 +36,7 @@ export class Portfolio {
   symbolName: string;
   buyExecutionTime: Date;
   sellExecutionTime?: Date;
+  currentPrice?: number;
 
   constructor() {
     this.portfolioId = '';
@@ -55,6 +56,7 @@ export class Portfolio {
     this.tradeType = 'Holding';
     this.allowedRiskOnBuyDay = 0;
     this.tradeDays = 0;
+    this.currentPrice = 0;
 
     // this.buyOpen = 0;
     // this.buyHigh = 0;

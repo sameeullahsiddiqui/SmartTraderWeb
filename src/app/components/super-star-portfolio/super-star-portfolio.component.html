@@ -35,7 +35,7 @@
     </ng-template>
   </p-toolbar>
 
-  <p-table #dt [value]="superStarPortfolioCollection" [rows]="10" [paginator]="true"
+  <p-table #dt [value]="superStarPortfolioCollection" [rows]="100" [paginator]="true"
           [globalFilterFields]="['symbol', 'status']"
           [(selection)]="selectedSuperStarPortfolios" [rowHover]="true" dataKey="id"
            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -88,9 +88,8 @@
           <p-tableCheckbox [value]="superStarPortfolio"></p-tableCheckbox>
         </td>
         <td>{{ superStarPortfolio.date | date }}</td>
-        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;"
-        (click)= "showStock(superStarPortfolio.symbol)">
-           {{ superStarPortfolio.symbol }}
+        <td class="p-inputgroup" style="cursor: pointer; text-decoration: underline;">
+          <span (click)= "showStock(superStarPortfolio.symbol)"> {{ superStarPortfolio.symbol }}</span>
             <button pButton pRipple type="button"
             icon="pi pi-chart-bar"
             class="p-button-rounded p-button-secondary p-button-text"

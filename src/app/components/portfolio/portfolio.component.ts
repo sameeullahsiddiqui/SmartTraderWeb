@@ -84,6 +84,7 @@ export class PortfolioComponent implements OnInit {
   destroy$: Subject<boolean> = new Subject<boolean>();
   results: string[] = [];
 
+
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -100,7 +101,7 @@ export class PortfolioComponent implements OnInit {
     this.titleService.setTitle('Portfolio');
 
     this.setFormData();
-  }
+    }
 
   private setFormData() {
     this.formInput = new FormGroup({
