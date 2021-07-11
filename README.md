@@ -1,3 +1,6 @@
+# for hosting angular on iss we need url re writing module
+  https://www.microsoft.com/web/handlers/webpi.ashx?command=getinstallerredirect&appid=urlrewrite2
+
 # SmartTraderAngular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
