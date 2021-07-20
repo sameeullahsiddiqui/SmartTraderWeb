@@ -49,6 +49,12 @@
         <th pSortableColumn="monthly">Monthly<p-sortIcon field="monthly"></p-sortIcon></th>
         <th pSortableColumn="last">Price<p-sortIcon field="last"></p-sortIcon></th>
         <th pSortableColumn="deliveryQty">Delivery Qty<p-sortIcon field="deliveryQty"></p-sortIcon></th>
+        <th pSortableColumn="avgVolume_30">
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Avg Qty
+            <p-columnFilter type="numeric" field="avgVolume_30" display="menu"></p-columnFilter>
+          </div>
+          <p-sortIcon field="avgVolume_30"></p-sortIcon></th>
         <th pSortableColumn="reason">Reason<p-sortIcon field="reason"></p-sortIcon></th>
       </tr>
     </ng-template>
@@ -98,6 +104,9 @@
 
         <td class="right-aligned">
           {{ delivery.deliveryQty }}
+        </td>
+        <td class="right-aligned">
+          {{ delivery.avgVolume_30 }}
         </td>
         <td>{{ delivery.reason }}</td>
       </tr>

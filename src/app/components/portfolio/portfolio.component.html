@@ -122,10 +122,11 @@
         <td>{{ portfolio.status }}</td>
         <td
         [ngClass]="{
-          positive: portfolio.currentProfit > 0,
-          negative: portfolio.currentProfit < 0
+          positive: (portfolio.holdingProfit - portfolio.currentProfit) > 0,
+          negative: (portfolio.holdingProfit - portfolio.currentProfit) < 0
           }"
-        >{{ portfolio.currentProfit | currency: "INR" }}</td>
+        >{{ portfolio.holdingProfit - portfolio.currentProfit | currency: "INR" }}</td>
+
          <td> {{ portfolio.currentPrice  | currency: "INR" }}</td>
         <td class="p-inputgroup">
           <div class="p-grid">

@@ -154,8 +154,8 @@ export class EarningReportComponent implements OnInit, OnDestroy {
     } else {
       this.loading = true;
       this.earningReportService
-        //.getAll()
-        .getDataByDate(dateString,true)
+        .getAll()
+        //.getDataByDate(dateString,true)
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (data: any[]) => {
