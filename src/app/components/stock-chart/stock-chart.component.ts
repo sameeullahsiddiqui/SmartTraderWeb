@@ -106,22 +106,11 @@ export class StockChartComponent implements OnInit, OnDestroy {
   top: number | undefined;
 
   q1HighLine: YAxisPlotLinesOptions = {};
-  q2HighLine: YAxisPlotLinesOptions = {};
-  q3HighLine: YAxisPlotLinesOptions = {};
-  q4HighLine: YAxisPlotLinesOptions = {};
 
   q1LowLine: YAxisPlotLinesOptions = {};
-  q2LowLine: YAxisPlotLinesOptions = {};
-  q3LowLine: YAxisPlotLinesOptions = {};
-  q4LowLine: YAxisPlotLinesOptions = {};
+
   isQ1HighVisible = false;
-  isQ2HighVisible = false;
-  isQ3HighVisible = false;
-  isQ4HighVisible = false;
   isQ1LowVisible = false;
-  isQ2LowVisible = false;
-  isQ3LowVisible = false;
-  isQ4LowVisible = false;
   chartColors: string[] = [];
 //#endregion END Variables Declaration
 
@@ -252,12 +241,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
         this.setRSIFlag(),
         { type: 'area', name: 'Q1High', color: 'red', visible:false },
         { type: 'area', name: 'Q1Low', color: 'green', visible:false },
-        { type: 'area', name: 'Q2High', color: 'red', visible:false },
-        { type: 'area', name: 'Q2Low', color: 'green', visible:false },
-        { type: 'area', name: 'Q3High', color: 'red', visible:false },
-        { type: 'area', name: 'Q3Low', color: 'green', visible:false },
-        { type: 'area', name: 'Q4High', color: 'red', visible:false },
-        { type: 'area', name: 'Q4Low', color: 'green', visible:false },
       ],
     };
   }
@@ -273,30 +256,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
         }
         this.isQ1HighVisible = !this.isQ1HighVisible;
         break;
-      case 'Q2High':
-        if (this.isQ2HighVisible) {
-          chart.yAxis[0].removePlotLine('Q2High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q2HighLine);
-        }
-        this.isQ2HighVisible = !this.isQ2HighVisible;
-        break;
-      case 'Q3High':
-        if (this.isQ3HighVisible) {
-          chart.yAxis[0].removePlotLine('Q3High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q3HighLine);
-        }
-        this.isQ3HighVisible = !this.isQ3HighVisible;
-        break;
-      case 'Q4High':
-        if (this.isQ4HighVisible) {
-          chart.yAxis[0].removePlotLine('Q4High');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q4HighLine);
-        }
-        this.isQ4HighVisible = !this.isQ4HighVisible;
-        break;
       case 'Q1Low':
         if (this.isQ1LowVisible) {
           chart.yAxis[0].removePlotLine('Q1Low');
@@ -304,31 +263,6 @@ export class StockChartComponent implements OnInit, OnDestroy {
           chart.yAxis[0].addPlotLine(this.q1LowLine);
         }
         this.isQ1LowVisible = !this.isQ1LowVisible;
-        break;
-      case 'Q2Low':
-        if (this.isQ2LowVisible) {
-          chart.yAxis[0].removePlotLine('Q2Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q2LowLine);
-        }
-        this.isQ2LowVisible = !this.isQ2LowVisible;
-
-        break;
-      case 'Q3Low':
-        if (this.isQ3LowVisible) {
-          chart.yAxis[0].removePlotLine('Q3Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q3LowLine);
-        }
-        this.isQ3LowVisible = !this.isQ3LowVisible;
-        break;
-      case 'Q4Low':
-        if (this.isQ4LowVisible) {
-          chart.yAxis[0].removePlotLine('Q4Low');
-        } else {
-          chart.yAxis[0].addPlotLine(this.q4LowLine);
-        }
-        this.isQ4LowVisible = !this.isQ4LowVisible;
         break;
       default:
         break;
@@ -435,14 +369,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
 
     if(highLowData) {
     this.q1HighLine.value = highLowData.q1High;
-    this.q2HighLine.value = highLowData.q2High;
-    this.q3HighLine.value = highLowData.q3High;
-    this.q4HighLine.value = highLowData.q4High;
 
     this.q1LowLine.value = highLowData.q1Low;
-    this.q2LowLine.value = highLowData.q2Low;
-    this.q3LowLine.value = highLowData.q3Low;
-    this.q4LowLine.value = highLowData.q4Low;
 
     //this.chartOptions.yAxis[0].plotLines[0].value = highLowData.q1High;
     //this.chartOptions.yAxis[0].plotLines[1].value = highLowData.q1Low;
@@ -478,14 +406,8 @@ export class StockChartComponent implements OnInit, OnDestroy {
 
   private setHighLowLines() {
     this.isQ1HighVisible = true;
-    this.isQ2HighVisible = false;
-    this.isQ3HighVisible = false;
-    this.isQ4HighVisible = false;
 
     this.isQ1LowVisible = true;
-    this.isQ2LowVisible = false;
-    this.isQ3LowVisible = false;
-    this.isQ4LowVisible = false;
 
     this.q1HighLine = {
       value: 0,
@@ -493,34 +415,7 @@ export class StockChartComponent implements OnInit, OnDestroy {
       color: 'red',
       dashStyle: 'ShortDash',
       width: 2,
-      label: { text: 'Q1 high' },
-    };
-
-    this.q2HighLine = {
-      value: 0,
-      id: 'Q2High',
-      color: 'red',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q2 high' },
-    };
-
-    this.q3HighLine = {
-      value: 0,
-      id: 'Q3High',
-      color: 'red',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q3 high' },
-    };
-
-    this.q4HighLine = {
-      value: 0,
-      id: 'Q4High',
-      color: 'red',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q4 high' },
+      label: { text: 'Q high' },
     };
 
     this.q1LowLine = {
@@ -529,35 +424,9 @@ export class StockChartComponent implements OnInit, OnDestroy {
       color: 'green',
       dashStyle: 'ShortDash',
       width: 2,
-      label: { text: 'Q1 low' },
+      label: { text: 'Q low' },
     };
 
-    this.q2LowLine = {
-      value: 0,
-      id: 'Q2Low',
-      color: 'green',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q2 low' },
-    };
-
-    this.q3LowLine = {
-      value: 0,
-      id: 'Q3Low',
-      color: 'green',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q3 low' },
-    };
-
-    this.q4LowLine = {
-      value: 0,
-      id: 'Q4Low',
-      color: 'green',
-      dashStyle: 'ShortDash',
-      width: 2,
-      label: { text: 'Q4 low' },
-    };
   }
 
   private setYAxis() {
